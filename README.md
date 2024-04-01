@@ -1,6 +1,6 @@
 # gencoff_app
 
-A new Flutter project.
+Aplikasi berbasis mobile yang akan di integrasikan ke Internet of Think yang berguna untuk mengirim dan melihat rekapitulasi data sortir. 
 
 ## Getting Started
 
