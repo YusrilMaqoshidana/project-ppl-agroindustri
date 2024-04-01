@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/pages/forgot_password_page.dart';
-import 'package:gencoff_app/pages/login_page.dart';
-import 'package:gencoff_app/pages/recovery_password_page.dart';
-import 'package:gencoff_app/pages/register_page.dart';
+import 'package:gencoff_app/pages/auth/forgot_password_page.dart';
+import 'package:gencoff_app/pages/auth/login_page.dart';
+import 'package:gencoff_app/pages/auth/recovery_password_page.dart';
+import 'package:gencoff_app/pages/auth/register_page.dart';
 
 void main() {
   runApp(const Gencoff());
