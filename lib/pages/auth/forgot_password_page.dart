@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/widgets/button.dart';
-import 'package:gencoff_app/widgets/input.dart';
+import 'package:gencoff_app/utils/button.dart';
+import 'package:gencoff_app/utils/input.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
@@ -11,34 +11,55 @@ class ForgotPasswordPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.all(25),
-          child: Column(
-            children: [
-              Text(
+            margin: EdgeInsets.only(left: 25, right: 25, bottom: 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
                   "Lupa Password",
                   style: TextStyle(
                     fontFamily: "Inter",
                     fontWeight: FontWeight.w700,
                     fontSize: 28,
                     letterSpacing: 3,
-                  ),),
-              Image.asset('../../../assets/images/forgot_password.png', width: 300,),
-              SizedBox(height: 200,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Email"),
-                  SizedBox(height: 5,),
-                  InputWithoutIcon(text: "Masukan Email"),
-                ],
-              ),
-              SizedBox(height: 40,),
-              Button(text: "Konfirmasi", onPressed: (){})
-            ],
+                  ),
+                ),
+                Image.asset(
+                  'assets/images/forgot_password.png',
+                  width: 250,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Email",
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    InputWithoutIcon(text: "Masukan Email"),
+                  ],
+                ),
+                SizedBox(
+                  height: 220,
+                ),
+                Button(
+                    text: "Konfirmasi",
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/recovery_password");
+                    })
+              ],
+            ),
           ),
-        ),
       ),
     );
   }
