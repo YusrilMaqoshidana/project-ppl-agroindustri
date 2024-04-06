@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/button.dart';
+import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/input.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
+class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
+  @override
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+}
+
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final TextEditingController _controllerEmail = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,13 +52,13 @@ class ForgotPasswordPage extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
-                    InputWithoutIcon(text: "Masukan Email"),
+                    InputWithoutIcon(text: "Masukan Email", controller: _controllerEmail,),
                   ],
                 ),
                 SizedBox(
                   height: 220,
                 ),
-                Button(
+                LongButton(
                     text: "Konfirmasi",
                     onPressed: () {
                       Navigator.pushNamed(context, "/recovery_password");

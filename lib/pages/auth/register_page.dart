@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/button.dart';
+import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/gesture_detector.dart';
 import 'package:gencoff_app/utils/input.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+  RegisterPage({super.key});
+  final _userController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _passwordConfirmController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +23,7 @@ class RegisterPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Register",
+                "Daftar",
                 style: TextStyle(
                   fontFamily: "Inter",
                   fontWeight: FontWeight.w700,
@@ -43,7 +47,7 @@ class RegisterPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  InputWithoutIcon(text: "Masukan Username"),
+                  InputWithoutIcon(text: "Masukan Username", controller: _userController,),
                   SizedBox(
                     height: 10,
                   ),
@@ -57,7 +61,7 @@ class RegisterPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  InputWithoutIcon(text: "Email"),
+                  InputWithoutIcon(text: "Masukan email", controller: _emailController,),
                   SizedBox(
                     height: 10,
                   ),
@@ -71,12 +75,12 @@ class RegisterPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  InputPassword(text: "Masukan Password"),
+                  InputPassword(text: "Masukan password", controller: _passwordController,),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Konfirmasi Password",
+                    "Konfirmasi password",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -85,13 +89,13 @@ class RegisterPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  InputPassword(text: "Masukan Password"),
+                  InputPassword(text: "Masukan password", controller: _passwordConfirmController,),
                 ],
               ),
               SizedBox(
                 height: 100,
               ),
-              Button(text: "Daftar", onPressed: () {}),
+              LongButton(text: "Daftar", onPressed: () {}),
               SizedBox(
                 height: 20,
               ),
@@ -102,7 +106,7 @@ class RegisterPage extends StatelessWidget {
                   Container(
                       padding: EdgeInsets.only(left: 5),
                       child: Gesture(
-                          text: "Login",
+                          text: "Masuk",
                           onTap: () {
                             Navigator.pushNamed(context, "/login");
                           }))

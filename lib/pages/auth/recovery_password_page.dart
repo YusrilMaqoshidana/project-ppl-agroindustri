@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/button.dart';
+import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/input.dart';
 
 class RecoveryPasswordPage extends StatelessWidget {
-  const RecoveryPasswordPage({super.key});
+  RecoveryPasswordPage({super.key});
+  final _passwordConfirmController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class RecoveryPasswordPage extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
-                    InputPassword(text: "Masukan Password"),
+                    InputPassword(text: "Masukan Password", controller: _passwordController,),
                     SizedBox(height: 20),
                     Text(
                       "Konfirmasi password",
@@ -55,13 +57,13 @@ class RecoveryPasswordPage extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
-                    InputPassword(text: "Masukan Password"),
+                    InputPassword(text: "Masukan Password", controller: _passwordConfirmController,),
                   ],
                 ),
                 SizedBox(
                   height: 260,
                 ),
-                Button(text: "Simpan", onPressed: () {})
+                LongButton(text: "Simpan", onPressed: () {})
               ],
             ),
           ),

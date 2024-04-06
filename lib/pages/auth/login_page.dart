@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/pages/Homepage/first_page.dart';
-import 'package:gencoff_app/utils/button.dart';
+import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/gesture_detector.dart';
 import 'package:gencoff_app/utils/input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gencoff_app/providers/auth_provider.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String? errorMessage = '';
+  bool isLogin = true;
+
+  final _controllerEmail = TextEditingController();
+  final _controllerPassword = TextEditingController();
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+          email: _controllerEmail.text.trim(),
+          password: _controllerPassword.text.trim());
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +48,7 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "LOGIN",
+                "Masuk",
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,
@@ -36,7 +67,7 @@ class LoginPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Username",
+                    "Email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -45,7 +76,10 @@ class LoginPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  InputWithoutIcon(text: "Masukan Email"),
+                  InputWithoutIcon(
+                    text: "Masukan email",
+                    controller: _controllerEmail,
+                  ),
                   SizedBox(height: 20),
                   Text(
                     "Password",
@@ -57,7 +91,10 @@ class LoginPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  InputPassword(text: "Masukan Password"),
+                  InputPassword(
+                    text: "Masukan password",
+                    controller: _controllerPassword,
+                  ),
                 ],
               ),
               SizedBox(
@@ -75,11 +112,10 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 140),
-              Button(
-                text: "LOGIN",
+              LongButton(
+                text: "Masuk",
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => FirstPage()));
+                  signInWithEmailAndPassword();
                 },
               ),
               SizedBox(
@@ -99,7 +135,7 @@ class LoginPage extends StatelessWidget {
                     width: 5,
                   ),
                   Gesture(
-                    text: "Register",
+                    text: "Daftar",
                     onTap: () {
                       Navigator.pushNamed(context, '/register');
                     },

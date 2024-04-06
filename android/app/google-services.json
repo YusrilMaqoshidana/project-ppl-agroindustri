@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "797566802074",
+    "project_id": "gencoff-app",
+    "storage_bucket": "gencoff-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797566802074:android:d8d3764c77f6ea908ce723",
+        "android_client_info": {
+          "package_name": "com.example.gencoff_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6_3Px_Uh9y-W0d0CHMdf_cLyB-iUuLCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
