@@ -12,7 +12,7 @@ class Gesture extends StatelessWidget {
       onTap: onTap,
       child: Text(
         text,
-        style: TextStyle(fontFamily: 'Inter',fontSize: 16, color: Colors.brown),
+        style: TextStyle(fontFamily: 'Inter',fontSize: 16, color: Colors.blue),
       ),
     );
   }
