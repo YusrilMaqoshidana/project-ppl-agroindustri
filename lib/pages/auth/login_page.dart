@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String? errorMessage = '';
-  bool isLogin = true;
+  bool isSucces = true;
 
   final _controllerEmail = TextEditingController();
   final _controllerPassword = TextEditingController();
@@ -24,9 +24,10 @@ class _LoginPageState extends State<LoginPage> {
       await Auth().signInWithEmailAndPassword(
           email: _controllerEmail.text.trim(),
           password: _controllerPassword.text.trim());
+          _showSuccesDialog();
     } on FirebaseAuthException catch (e) {
       setState(() {
-        errorMessage = e.message;
+        _showErrorDialog("${e.message}");
       });
     }
   }
@@ -36,6 +37,48 @@ class _LoginPageState extends State<LoginPage> {
     _controllerEmail.dispose();
     _controllerPassword.dispose();
     super.dispose();
+  }
+
+  void _showErrorDialog(String message) {
+    setState(() {
+      isSucces = !isSucces;
+    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccesDialog() {
+    setState(() {
+      isSucces = !isSucces;
+    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Masuk berhasil!'),
+          content: Text("Selamat anda berhasil masuk"),
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

@@ -32,6 +32,9 @@ class _FirstPageState extends State<FirstPage> {
     return Scaffold(
       body: _pages[_selectedIndex], 
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.brown, // Warna coklat untuk bottom navigation bar
+        selectedItemColor: Colors.white, // Warna putih untuk item yang dipilih
+        unselectedItemColor: Colors.brown[200], // Warna coklat muda untuk item yang tidak dipilih
         currentIndex: _selectedIndex,
         onTap: _navigateBottomBar,
         items: [

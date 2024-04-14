@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
             side: BorderSide(color: Colors.grey, width: 2)),
         child: Container(
           padding: EdgeInsets.all(25),
-          height: 430,
+          height: !isEdit ? 400 : 430,
           width: 350,
           decoration: BoxDecoration(color: Colors.white),
           child: Column(
@@ -284,24 +284,7 @@ class _HomePageState extends State<HomePage> {
                 height: 50,
               ),
               !isEdit
-                  ? LongButton(
-                      text: "Reset",
-                      onPressed: () {
-                        setState(() {
-                          _hijauKecil = 0;
-                          _hijauSedang = 0;
-                          _hijauBesar = 0;
-                          _merahKecil = 0;
-                          _merahSedang = 0;
-                          _merahBesar = 0;
-                          _hijauKecilController.clear();
-                          _hijauSedangController.clear();
-                          _hijauBesarController.clear();
-                          _merahKecilController.clear();
-                          _merahSedangController.clear();
-                          _merahBesarController.clear();
-                        });
-                      })
+                  ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.lock)])
                   : LongButton(
                       text: "Simpan",
                       onPressed: () {
@@ -341,8 +324,8 @@ class _HomePageState extends State<HomePage> {
               height: 25,
             ),
             _cardForm(),
-            SizedBox(height: 50,),
-            LongButton(text: "Selesai", onPressed: (){}),
+            SizedBox(height: 20,),
+            Container(margin: EdgeInsets.all(25),child: LongButton(text: "Selesai", onPressed: (){})),
             SizedBox(height: 20,),
           ],
         )),
