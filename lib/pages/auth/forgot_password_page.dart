@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/input.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+  const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -18,6 +19,44 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
+  Future<void> _passwordReset() async {
+    if (_isValidEmail(_controllerEmail.text.trim())) {
+      try {
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: _controllerEmail.text.trim());
+        _showDialog('Berhasil dikirim!',
+            'Link berhasil dikirim, silahkan cek email kamu');
+      } on FirebaseAuthException catch (e) {
+        _showDialog('Error', e.message ?? 'Terjadi kesalahan');
+      }
+    } else {
+      _showDialog('Error', 'Masukkan alamat email yang valid');
+    }
+  }
+
+  bool _isValidEmail(String email) {
+    // Gunakan ekspresi reguler atau pustaka validasi email untuk memeriksa format email
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +65,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: 25, right: 25, bottom: 5),
+          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -66,13 +105,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ],
               ),
               SizedBox(
-                height: 220,
+                height: 20,
               ),
               LongButton(
-                  text: "Konfirmasi",
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/recovery_password");
-                  })
+                text: "Konfirmasi",
+                onPressed: _passwordReset,
+              )
             ],
           ),
         ),

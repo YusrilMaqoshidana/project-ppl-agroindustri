@@ -5,41 +5,58 @@ import 'package:gencoff_app/utils/gesture_detector.dart';
 import 'package:gencoff_app/utils/input.dart';
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({super.key});
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final _userController = TextEditingController();
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController = TextEditingController();
 
-  final _emailController = TextEditingController();
+  @override
+  void dispose() {
+    _userController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmController.dispose();
+    super.dispose();
+  }
 
-  final _passwordController = TextEditingController();
-
-  final _passwordConfirmController = TextEditingController();
-  bool isSucces = true;
-  void signUp() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-      _showSuccesDialog();
-    } on FirebaseAuthException catch (e) {
-      _showErrorDialog("${e.message}");
+  Future<void> _signUp() async {
+    if (_isValidEmail(_emailController.text.trim()) &&
+        _isValidPassword(_passwordController.text.trim()) &&
+        _passwordController.text.trim() == _passwordConfirmController.text.trim()) {
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
+        _showDialog('Berhasil!', 'Sukses membuat akun');
+      } on FirebaseAuthException catch (e) {
+        _showDialog('Error', e.message ?? 'Terjadi kesalahan');
+      }
+    } else {
+      _showDialog('Error', 'Pastikan email valid dan password cocok');
     }
   }
 
-  void _showErrorDialog(String message) {
-    setState(() {
-      isSucces = !isSucces;
-    });
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  }
+
+  bool _isValidPassword(String password) {
+    return password.length >= 6; // Misalnya, minimal 6 karakter
+  }
+
+  void _showDialog(String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: Text(title),
           content: Text(message),
           actions: [
             TextButton(
@@ -52,36 +69,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _showSuccesDialog() {
-    setState(() {
-      isSucces = !isSucces;
-    });
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Berhasil!'),
-          content: Text("Sukses membuat akun"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pushNamed(context, "/login"),
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _userController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _passwordConfirmController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: 25, right: 25, top: 10, bottom: 5),
+          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -180,15 +167,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 100,
               ),
               LongButton(
-                  text: "Daftar",
-                  onPressed: () {
-                    if (_passwordConfirmController.text.trim() == _passwordController.text.trim()) {
-                      signUp();
-                    } else {
-                      _showErrorDialog(
-                          "Password dan konfirmasi password tidak sama");
-                    }
-                  }),
+                text: "Daftar",
+                onPressed: _signUp,
+              ),
               SizedBox(
                 height: 20,
               ),

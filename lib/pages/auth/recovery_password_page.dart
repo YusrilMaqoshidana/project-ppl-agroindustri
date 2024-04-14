@@ -1,24 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/input.dart';
+// import 'package:firebase_auth/firebase_auth.dart';/
 
 class RecoveryPasswordPage extends StatefulWidget {
-  RecoveryPasswordPage({super.key});
+  RecoveryPasswordPage({Key? key}) : super(key: key);
 
   @override
   State<RecoveryPasswordPage> createState() => _RecoveryPasswordPageState();
 }
 
 class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
-  final _passwordConfirmController = TextEditingController();
-
-  final _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String _errorMessage = '';
 
   @override
   void dispose() {
     _passwordConfirmController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _resetPassword(String newPassword) async {
+    setState(() {
+      _isLoading = true;
+    });
+    
+    try {
+      // Ganti ini dengan metode untuk mengirim permintaan pengaturan ulang kata sandi
+      // ke Firebase Authentication
+      // await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      
+      // Tampilkan pesan sukses jika berhasil
+      _showSuccessDialog("Permintaan pengaturan ulang kata sandi berhasil dikirim");
+    } catch (e) {
+      // Tangani kesalahan jika terjadi
+      _showErrorDialog("Terjadi kesalahan: $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    setState(() {
+      _errorMessage = message;
+    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -30,7 +98,7 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
       body: SingleChildScrollView(
         child: Center(
           child: Container(
-            margin: EdgeInsets.only(left: 25, right: 25, bottom: 5),
+            margin: EdgeInsets.symmetric(horizontal: 25, vertical: 100),
             child: Column(
               children: [
                 Text(
@@ -80,9 +148,34 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
                   ],
                 ),
                 SizedBox(
-                  height: 260,
+                  height: 100,
                 ),
-                LongButton(text: "Simpan", onPressed: () {})
+                _isLoading
+                    ? CircularProgressIndicator()
+                    : LongButton(
+                        text: "Simpan",
+                        onPressed: () {
+                          String newPassword = _passwordController.text.trim();
+                          String confirmPassword = _passwordConfirmController.text.trim();
+
+                          if (newPassword.isNotEmpty && confirmPassword.isNotEmpty) {
+                            if (newPassword == confirmPassword) {
+                              _resetPassword(newPassword);
+                            } else {
+                              _showErrorDialog("Password dan konfirmasi password tidak cocok");
+                            }
+                          } else {
+                            _showErrorDialog("Mohon masukkan password");
+                          }
+                        },
+                      ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  _errorMessage,
+                  style: TextStyle(color: Colors.red),
+                ),
               ],
             ),
           ),

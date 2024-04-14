@@ -16,12 +16,14 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _merahKecilController = TextEditingController();
   final TextEditingController _merahSedangController = TextEditingController();
   final TextEditingController _merahBesarController = TextEditingController();
-  int _hijauKecil = 0;
-  int _hijauSedang = 0;
-  int _hijauBesar = 0;
-  int _merahKecil = 0;
-  int _merahSedang = 0;
-  int _merahBesar = 0;
+  Map<String, int> _sensorValues = {
+    'hijauKecil': 0,
+    'hijauSedang': 0,
+    'hijauBesar': 0,
+    'merahKecil': 0,
+    'merahSedang': 0,
+    'merahBesar': 0,
+  };
   bool isEdit = false;
 
   Widget _title() {
@@ -78,7 +80,7 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Center(
                   child: Text(
-                "0",
+                "${_sensorValues['hijauKecil']}",
                 style: TextStyle(color: Colors.white),
               )),
             )
@@ -104,7 +106,7 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Center(
                   child: Text(
-                "0",
+                "${_sensorValues['merahKecil']}",
                 style: TextStyle(color: Colors.white),
               )),
             )
@@ -219,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text("Kecil"),
                       !isEdit
-                          ? _readData(_hijauKecil)
+                          ? _readData(_sensorValues['hijauKecil']!)
                           : _textInput(_hijauKecilController)
                     ],
                   ),
@@ -227,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text("Sedang"),
                       !isEdit
-                          ? _readData(_hijauSedang)
+                          ? _readData(_sensorValues['hijauSedang']!)
                           : _textInput(_hijauSedangController)
                     ],
                   ),
@@ -235,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text("Besar"),
                       !isEdit
-                          ? _readData(_hijauBesar)
+                          ? _readData(_sensorValues['hijauBesar']!)
                           : _textInput(_hijauBesarController)
                     ],
                   ),
@@ -259,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text("Kecil"),
                     !isEdit
-                        ? _readData(_merahKecil)
+                        ? _readData(_sensorValues['merahKecil']!)
                         : _textInput(_merahKecilController)
                   ],
                 ),
@@ -267,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text("Sedang"),
                     !isEdit
-                        ? _readData(_merahSedang)
+                        ? _readData(_sensorValues['merahSedang']!)
                         : _textInput(_merahSedangController)
                   ],
                 ),
@@ -275,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text("Besar"),
                     !isEdit
-                        ? _readData(_merahBesar)
+                        ? _readData(_sensorValues['merahBesar']!)
                         : _textInput(_merahBesarController)
                   ],
                 ),
@@ -289,12 +291,12 @@ class _HomePageState extends State<HomePage> {
                       text: "Simpan",
                       onPressed: () {
                         setState(() {
-                          _hijauKecil = int.parse(_hijauKecilController.text);
-                          _hijauSedang = int.parse(_hijauSedangController.text);
-                          _hijauBesar = int.parse(_hijauBesarController.text);
-                          _merahKecil = int.parse(_merahKecilController.text);
-                          _merahSedang = int.parse(_merahSedangController.text);
-                          _merahBesar = int.parse(_merahBesarController.text);
+                          _sensorValues['hijauKecil'] = int.parse(_hijauKecilController.text);
+                          _sensorValues['hijauSedang'] = int.parse(_hijauSedangController.text);
+                          _sensorValues['hijauBesar'] = int.parse(_hijauBesarController.text);
+                          _sensorValues['merahKecil'] = int.parse(_merahKecilController.text);
+                          _sensorValues['merahSedang'] = int.parse(_merahSedangController.text);
+                          _sensorValues['merahBesar'] = int.parse(_merahBesarController.text);
                           isEdit = !isEdit;
                         });
                       })

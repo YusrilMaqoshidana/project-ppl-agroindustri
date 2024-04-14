@@ -6,31 +6,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gencoff_app/providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String? errorMessage = '';
-  bool isSucces = true;
-
-  final _controllerEmail = TextEditingController();
-  final _controllerPassword = TextEditingController();
-
-  Future<void> signInWithEmailAndPassword() async {
-    try {
-      await Auth().signInWithEmailAndPassword(
-          email: _controllerEmail.text.trim(),
-          password: _controllerPassword.text.trim());
-          _showSuccesDialog();
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _showErrorDialog("${e.message}");
-      });
-    }
-  }
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
 
   @override
   void dispose() {
@@ -39,40 +23,40 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _showErrorDialog(String message) {
-    setState(() {
-      isSucces = !isSucces;
-    });
+  Future<void> _signInWithEmailAndPassword() async {
+    if (_isValidEmail(_controllerEmail.text.trim()) &&
+        _isValidPassword(_controllerPassword.text.trim())) {
+      try {
+        await Auth().signInWithEmailAndPassword(
+            email: _controllerEmail.text.trim(),
+            password: _controllerPassword.text.trim());
+        _showDialog('Masuk berhasil!', 'Selamat anda berhasil masuk');
+      } on FirebaseAuthException catch (e) {
+        _showDialog('Error', e.message ?? 'Terjadi kesalahan');
+      }
+    } else {
+      _showDialog('Error', 'Masukkan email dan password yang valid');
+    }
+  }
+
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  }
+
+  bool _isValidPassword(String password) {
+    return password.length >= 6; // Misalnya, minimal 6 karakter
+  }
+
+  void _showDialog(String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: Text(title),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showSuccesDialog() {
-    setState(() {
-      isSucces = !isSucces;
-    });
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Masuk berhasil!'),
-          content: Text("Selamat anda berhasil masuk"),
-          actions: [
-            TextButton(
-              onPressed: () {},
               child: Text('OK'),
             ),
           ],
@@ -86,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: 25, right: 25, top: 100, bottom: 5),
+          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 100),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -144,22 +128,20 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.end, // Mengatur teks di ujung kanan
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Gesture(
-                      text: "Lupa password?",
-                      onTap: () {
-                        Navigator.pushNamed(context, '/forgot_password');
-                      }),
+                    text: "Lupa password?",
+                    onTap: () {
+                      Navigator.pushNamed(context, '/forgot_password');
+                    },
+                  ),
                 ],
               ),
               SizedBox(height: 140),
               LongButton(
                 text: "Masuk",
-                onPressed: () {
-                  signInWithEmailAndPassword();
-                },
+                onPressed: _signInWithEmailAndPassword,
               ),
               SizedBox(
                 height: 20,
@@ -168,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Belom punya akun?",
+                    "Belum punya akun?",
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
@@ -182,9 +164,9 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.pushNamed(context, '/register');
                     },
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
