@@ -1,198 +1,151 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/providers/auth_provider.dart';
+import 'package:gencoff_app/providers/firebase_provider.dart';
 import 'package:gencoff_app/utils/long_button.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  final Map<String, String> profileData = {
-    'username': 'Moh. Yusril Maqoshidana',
-    'email': '222410102064@mail.unej.ac.id',
-    'password': '301103'
-  }; // Map untuk menyimpan data profil
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+Widget _title() {
+  return Text(
+    "Settings",
+    style: TextStyle(
+        color: Colors.white, fontFamily: "Inter", fontWeight: FontWeight.w700),
+  );
+}
 
-  bool isEdit = false;
+Widget _textBox(String subjudul, String data) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    padding: EdgeInsets.only(left: 15, bottom: 15),
+    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              subjudul,
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.edit,
+                  size: 20,
+                ))
+          ],
+        ),
+        Text(data),
+      ],
+    ),
+  );
+}
+
+Future<void> signOut() async {
+  await Firebase().signOut();
+}
+
+Widget _signOutButton() {
+  return Container(
+    margin: EdgeInsets.all(25),
+    child: LongButton(text: "Keluar", onPressed: signOut),
+  );
+}
+
+Future<Map<String, String>> _fetchUserDetails() async {
+  try {
+    final userData = await Firebase()
+        .getUserDetails(); // Assuming FirebaseProvider has getUserDetails
+
+    if (userData.exists) {
+      return {'username': userData['username'], 'email': userData['email']};
+    } else {
+      print("User details not found or user is not logged in.");
+      return {}; // Return empty map if no data found
+    }
+  } catch (e) {
+    print("Error fetching user details: $e");
+    return {}; // Return empty map on error
+  }
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  Map<String, dynamic> _dataUser = {};
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    // Set nilai controller berdasarkan data profil yang telah dibaca
-    usernameController.text = profileData['username'] ?? '';
-    emailController.text = profileData['email'] ?? '';
-    passwordController.text = profileData['password'] ?? '';
+    _fetchData();
   }
 
-  Widget _title() {
-    return Center(
-      child: Text(
-        "Pengaturan",
-        style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Future<void> signOut() async {
-    await Auth().signOut();
-  }
-
-  Widget _signOutButton() {
-    return Container(
-      margin: EdgeInsets.all(25),
-      child: LongButton(text: "Keluar", onPressed: signOut),
-    );
-  }
-
-  Widget _inputData(TextEditingController controller, String label,
-      {String defaultValue = ''}) {
-    controller.text = defaultValue; // Set nilai default ke dalam controller
-    return Center(
-      child: Container(
-        width: 350,
-        height: 60,
-        child: TextField(
-          controller: controller,
-          enabled: isEdit,
-          obscureText: label.toLowerCase() == 'password',
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _readData(String? key, Map<String, String> profileData) {
-    String? data = profileData[key];
-    if (key == 'password') {
-      data = '*' * (data?.length ?? 0);
+  Future<void> _fetchData() async {
+    try {
+      final userData = await Firebase().getUserDetails();
+      setState(() {
+        _dataUser = userData.data() as Map<String, dynamic>;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching user details: $e");
+      setState(() {
+        _isLoading = false; // Setelah data gagal dimuat, tidak lagi loading
+      });
     }
-    return Center(
-      child: Container(
-        width: 350,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            color: Colors.grey.withOpacity(0.5),
-            width: 2,
-          ), // Menambahkan border
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0),
-              child: Text(
-                data ?? '',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _toggleEdit() {
-    setState(() {
-      isEdit = !isEdit;
-    });
-  }
-
-  void _saveProfile() {
-    setState(() {
-      // Simpan data profil yang diedit ke dalam variabel profileData
-      profileData['username'] = usernameController.text;
-      profileData['email'] = emailController.text;
-      profileData['password'] = passwordController.text;
-      isEdit = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _title(),
-        backgroundColor: Colors.brown,
-        actions: [
-          IconButton(
-            icon: Icon(isEdit ? Icons.save : Icons.edit),
-            onPressed: isEdit ? _saveProfile : _toggleEdit,
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                margin: EdgeInsets.only(left: 25),
-                child: Text(
-                  "Nama",
-                  style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
-                )),
-            !isEdit
-                ? _readData('username', profileData)
-                : _inputData(usernameController, 'Username',
-                    defaultValue: profileData['username'] ?? ''),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 25),
-                child: Text(
-                  "Email",
-                  style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
-                )),
-            !isEdit
-                ? _readData('email', profileData)
-                : _inputData(emailController, 'Email',
-                    defaultValue: profileData['email'] ?? ''),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 25),
-                child: Text(
-                  "Password",
-                  style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
-                )),
-            !isEdit
-                ? _readData('password', profileData)
-                : _inputData(passwordController, 'Password',
-                    defaultValue: profileData['password'] ?? ''),
-            _signOutButton(),
-          ],
+    if (_isLoading) {
+      return CircularProgressIndicator();
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: _title(),
+          backgroundColor: Colors.brown,
         ),
-      ),
-    );
+        body: Container(
+          decoration: BoxDecoration(color: Colors.grey[200]),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Icon(
+                    Icons.person,
+                    size: 72,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "P R O F I L",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  _textBox("Nama Lengkap", _dataUser['username']),
+                  _textBox("Email", _dataUser['email']),
+                ],
+              ),
+              _signOutButton(),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

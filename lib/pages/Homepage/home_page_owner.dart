@@ -327,7 +327,7 @@ class _HomePageState extends State<HomePage> {
             ),
             _cardForm(),
             SizedBox(height: 20,),
-            Container(margin: EdgeInsets.all(25),child: LongButton(text: "Selesai", onPressed: (){})),
+            Container(margin: EdgeInsets.all(25),child: !isEdit ? LongButton(text: "Selesai", onPressed: (){}) : LongButtonNonAktif(text: "Selesai")),
             SizedBox(height: 20,),
           ],
         )),

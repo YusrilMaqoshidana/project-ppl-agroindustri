@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/providers/firebase_provider.dart';
 import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/gesture_detector.dart';
 import 'package:gencoff_app/utils/input.dart';
+import 'package:gencoff_app/utils/alert.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
@@ -15,7 +17,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordConfirmController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -27,43 +30,72 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _signUp() async {
-    if (_isValidEmail(_emailController.text.trim()) &&
-        _isValidPassword(_passwordController.text.trim()) &&
-        _passwordController.text.trim() == _passwordConfirmController.text.trim()) {
+    if (_passwordController.text.trim() ==
+            _passwordConfirmController.text.trim() &&
+        usernameValidation(_userController)) {
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await Firebase().createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
-        _showDialog('Berhasil!', 'Sukses membuat akun');
+        Firebase().addUserDetails(
+            username: _userController.text.trim(),
+            email: _emailController.text.trim());
+        _showDialogSucces();
       } on FirebaseAuthException catch (e) {
-        _showDialog('Error', e.message ?? 'Terjadi kesalahan');
+        switch ('${e.code}') {
+          case 'invalid-email':
+            _showDialogFail("Pastikan format email anda benar");
+            break;
+          case 'channel-error':
+            _showDialogFail("Data tidak boleh kosong!");
+            break;
+          case 'weak-password':
+            _showDialogFail("Pastikan password lebih dari 6 karakter");
+            break;
+          case 'email-already-in-use':
+            _showDialogFail("Email yang anda masukan sudah terdaftar");
+            break;
+          case 'too-many-requests':
+            _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
+            break;
+          case 'network-request-failed':
+            _showDialogFail(
+                "Terdapat kesalahan dalam jaringan, coba lagi nanti");
+            break;
+          default:
+            _showDialogFail('${e.code}: ${e.message}');
+        }
       }
+    } else if (!usernameValidation(_userController)) {
+      _showDialogFail("Pastikan karakter username tidak terlalu pendek");
     } else {
-      _showDialog('Error', 'Pastikan email valid dan password cocok');
+      _showDialogFail('Pastikan password cocok');
     }
   }
 
-  bool _isValidEmail(String email) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  bool usernameValidation(TextEditingController username) {
+    return _userController.text.length >= 3;
   }
 
-  bool _isValidPassword(String password) {
-    return password.length >= 6; // Misalnya, minimal 6 karakter
-  }
-
-  void _showDialog(String title, String message) {
+  void _showDialogSucces() {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
+        return SuccesAlertState(
+          message: "Berhasil Daftar",
+          onPressed: () => Navigator.pushNamed(context, '/login'),
+        );
+      },
+    );
+  }
+
+  void _showDialogFail(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return FailAlertState(
+          message: message,
+          onPressed: () => Navigator.pop(context),
         );
       },
     );

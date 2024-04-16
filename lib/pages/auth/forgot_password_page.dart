@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/utils/alert.dart';
 import 'package:gencoff_app/utils/long_button.dart';
 import 'package:gencoff_app/utils/input.dart';
 
@@ -20,39 +22,38 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Future<void> _passwordReset() async {
-    if (_isValidEmail(_controllerEmail.text.trim())) {
-      try {
+    final email = _controllerEmail.text.trim();
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users') // Replace 'users' with your collection name
+        .where('email', isEqualTo: email) // Use email as document ID
+        .get();
+
+    if (!userDoc.docs.isEmpty) {
+      
         await FirebaseAuth.instance
             .sendPasswordResetEmail(email: _controllerEmail.text.trim());
-        _showDialog('Berhasil dikirim!',
-            'Link berhasil dikirim, silahkan cek email kamu');
-      } on FirebaseAuthException catch (e) {
-        _showDialog('Error', e.message ?? 'Terjadi kesalahan');
-      }
+        _showDialogSuccess('Link reset password berhasil terkirim, cek email anda!');
     } else {
-      _showDialog('Error', 'Masukkan alamat email yang valid');
+      _showDialogFail('Pastikan email anda valid');
     }
   }
 
-  bool _isValidEmail(String email) {
-    // Gunakan ekspresi reguler atau pustaka validasi email untuk memeriksa format email
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-  }
 
-  void _showDialog(String title, String message) {
+  void _showDialogFail(String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        );
+        return FailAlertState(
+            message: message, onPressed: () => Navigator.pop(context));
+      },
+    );
+  }
+
+  void _showDialogSuccess(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SuccesAlertState(message: message, onPressed: () => Navigator.pushNamed(context, '/login'));
       },
     );
   }
@@ -105,7 +106,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ],
               ),
               SizedBox(
-                height: 20,
+                height: 200,
               ),
               LongButton(
                 text: "Konfirmasi",
