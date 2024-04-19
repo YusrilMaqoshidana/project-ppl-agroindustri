@@ -125,6 +125,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Icon(
                     Icons.person,
                     size: 72,
+                    color: Colors.brown,
                   ),
                   const SizedBox(
                     height: 10,

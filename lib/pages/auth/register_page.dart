@@ -83,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context) {
         return SuccesAlertState(
           message: "Berhasil Daftar",
-          onPressed: () => Navigator.pushNamed(context, '/login'),
+          onPressed: () => Navigator.pushNamed(context, '/main_page'),
         );
       },
     );
@@ -214,7 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Gesture(
                       text: "Masuk",
                       onTap: () {
-                        Navigator.pushNamed(context, "/login");
+                        Navigator.pushNamed(context, '/main_page');
                       },
                     ),
                   ),

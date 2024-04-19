@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gencoff_app/firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/pages/auth/login_page.dart';
 import 'package:gencoff_app/pages/auth/main_page.dart';
 import 'package:gencoff_app/pages/Homepage/wifi_manager_page.dart';
 import 'package:gencoff_app/pages/auth/forgot_password_page.dart';
@@ -22,7 +21,7 @@ class Gencoff extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        '/login': (context) => LoginPage(),
+        '/main_page': (context) => MainPage(),
         '/register': (context) => RegisterPage(),
         '/forgot_password': (context) => ForgotPasswordPage(),
         '/recovery_password': (context) => RecoveryPasswordPage(),

@@ -53,7 +53,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return SuccesAlertState(message: message, onPressed: () => Navigator.pushNamed(context, '/login'));
+        return SuccesAlertState(message: message, onPressed: () => Navigator.pushNamed(context, '/main_page'));
       },
     );
   }
