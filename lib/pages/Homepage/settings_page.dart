@@ -105,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return CircularProgressIndicator();
+      return const Center(child: CircularProgressIndicator());
     } else {
       return Scaffold(
         appBar: AppBar(
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         fontWeight: FontWeight.w700),
                   ),
                   _textBox("Nama Lengkap", _dataUser['username']),
-                  _textBox("Email", _dataUser['email']),
+                  _textBox("Alamat email", _dataUser['email']),
                 ],
               ),
               _signOutButton(),

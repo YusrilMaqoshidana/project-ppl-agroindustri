@@ -24,7 +24,7 @@ class WifiManager extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          InputPassword(text: "Password", controller: _passwordController)
+          InputPassword(text: "Kata sandi", controller: _passwordController)
         ],
       ),
     );

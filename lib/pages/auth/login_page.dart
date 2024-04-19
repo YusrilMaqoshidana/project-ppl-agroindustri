@@ -51,14 +51,14 @@ class _LoginPageState extends State<LoginPage> {
                 "Terdapat kesalahan dalam jaringan, coba lagi nanti");
             break;
           case 'invalid-credential':
-            _showDialogFail("Email dan password yang anda masukan salah");
+            _showDialogFail("Alamat email dan kata sandi yang anda masukan salah");
             break;
           default:
             _showDialogFail('${e.code}: ${e.message}');
         }
       }
     } else {
-      _showDialogFail("Pastiksn email valid");
+      _showDialogFail("Pastiksn alamat email valid");
     }
   }
 
@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Email",
+                    "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -130,12 +130,12 @@ class _LoginPageState extends State<LoginPage> {
                     height: 5,
                   ),
                   InputWithoutIcon(
-                    text: "Masukan email",
+                    text: "Masukan alamat email",
                     controller: _controllerEmail,
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Password",
+                    "Kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 5,
                   ),
                   InputPassword(
-                    text: "Masukan password",
+                    text: "Masukan kata sandi",
                     controller: _controllerPassword,
                   ),
                 ],

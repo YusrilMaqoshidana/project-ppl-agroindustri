@@ -32,9 +32,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       
         await FirebaseAuth.instance
             .sendPasswordResetEmail(email: _controllerEmail.text.trim());
-        _showDialogSuccess('Link reset password berhasil terkirim, cek email anda!');
+        _showDialogSuccess('Link reset kata sandi berhasil terkirim, cek alamat email anda!');
     } else {
-      _showDialogFail('Pastikan email anda valid');
+      _showDialogFail('Pastikan alamat email anda valid');
     }
   }
 
@@ -90,7 +90,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Email",
+                    "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -100,7 +100,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     height: 5,
                   ),
                   InputWithoutIcon(
-                    text: "Masukan Email",
+                    text: "Masukan alamat email",
                     controller: _controllerEmail,
                   ),
                 ],

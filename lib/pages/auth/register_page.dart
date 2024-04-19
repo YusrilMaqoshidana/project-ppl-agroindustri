@@ -44,16 +44,16 @@ class _RegisterPageState extends State<RegisterPage> {
       } on FirebaseAuthException catch (e) {
         switch ('${e.code}') {
           case 'invalid-email':
-            _showDialogFail("Pastikan format email anda benar");
+            _showDialogFail("Pastikan format alamat email anda benar");
             break;
           case 'channel-error':
             _showDialogFail("Data tidak boleh kosong!");
             break;
           case 'weak-password':
-            _showDialogFail("Pastikan password lebih dari 6 karakter");
+            _showDialogFail("Pastikan kata sandi lebih dari 6 karakter");
             break;
           case 'email-already-in-use':
-            _showDialogFail("Email yang anda masukan sudah terdaftar");
+            _showDialogFail("Alamat email yang anda masukan sudah terdaftar");
             break;
           case 'too-many-requests':
             _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
@@ -67,9 +67,9 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       }
     } else if (!usernameValidation(_userController)) {
-      _showDialogFail("Pastikan karakter username tidak terlalu pendek");
+      _showDialogFail("Pastikan karakter nama tidak terlalu pendek");
     } else {
-      _showDialogFail('Pastikan password cocok');
+      _showDialogFail('Pastikan kata sandi cocok');
     }
   }
 
@@ -129,7 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Username",
+                    "Nama",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -139,14 +139,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 5,
                   ),
                   InputWithoutIcon(
-                    text: "Masukan Username",
+                    text: "Masukan nama",
                     controller: _userController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Email",
+                    "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -156,14 +156,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 5,
                   ),
                   InputWithoutIcon(
-                    text: "Masukan email",
+                    text: "Masukan alamat email",
                     controller: _emailController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Password",
+                    "Kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -173,14 +173,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 5,
                   ),
                   InputPassword(
-                    text: "Masukan password",
+                    text: "Masukan kata sandi",
                     controller: _passwordController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Konfirmasi password",
+                    "Konfirmasi kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
@@ -190,7 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 5,
                   ),
                   InputPassword(
-                    text: "Masukan password",
+                    text: "Masukan kata sandi",
                     controller: _passwordConfirmController,
                   ),
                 ],
