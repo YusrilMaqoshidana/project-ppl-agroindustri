@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/providers/firebase_provider.dart';
-import 'package:gencoff_app/utils/long_button.dart';
-import 'package:gencoff_app/utils/gesture_detector.dart';
-import 'package:gencoff_app/utils/input.dart';
-import 'package:gencoff_app/utils/alert.dart';
+import 'package:gencoff_app/utils/show_dialog.dart';
+import 'package:gencoff_app/utils/validasi_username.dart';
+import 'package:gencoff_app/view_models/auth/auth_login.dart';
+import 'package:gencoff_app/view_models/auth/register_view_model.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
+import 'package:gencoff_app/widgets/gesture_detector.dart';
+import 'package:gencoff_app/widgets/input.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
@@ -34,86 +36,60 @@ class _RegisterPageState extends State<RegisterPage> {
             _passwordConfirmController.text.trim() &&
         usernameValidation(_userController)) {
       try {
-        await Firebase().createUserWithEmailAndPassword(
+        await RegisterViewModel().createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
-        Firebase().addUserDetails(
+        RegisterViewModel().addUserDetails(
             username: _userController.text.trim(),
             email: _emailController.text.trim());
-        _showDialogSucces();
+        // ignore: use_build_context_synchronously
+        showDialogSucces(context,message: 'Berhasil membuat akun');
       } on FirebaseAuthException catch (e) {
         switch ('${e.code}') {
           case 'invalid-email':
-            _showDialogFail("Pastikan format alamat email anda benar");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context, message: "Pastikan format alamat email anda benar");
             break;
           case 'channel-error':
-            _showDialogFail("Data tidak boleh kosong!");
-            break;
-          case 'weak-password':
-            _showDialogFail("Pastikan kata sandi lebih dari 6 karakter");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context, message: "Data tidak boleh kosong!");
             break;
           case 'email-already-in-use':
-            _showDialogFail("Alamat email yang anda masukan sudah terdaftar");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context, message: "Alamat email yang anda masukan sudah terdaftar");
             break;
           case 'too-many-requests':
-            _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context,message: "Terlalu banyak permintaan, coba lagi nanti");
             break;
           case 'network-request-failed':
-            _showDialogFail(
-                "Terdapat kesalahan dalam jaringan, coba lagi nanti");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context, message: "Terdapat kesalahan dalam jaringan, coba lagi nanti", 
+                );
             break;
           default:
-            _showDialogFail('${e.code}: ${e.message}');
+            showDialogFail(context, message: '${e.code}: ${e.message}');
         }
       }
     } else if (!usernameValidation(_userController)) {
-      _showDialogFail("Pastikan karakter nama tidak terlalu pendek");
+      showDialogFail(context, message: "Pastikan karakter nama tidak terlalu pendek");
     } else {
-      _showDialogFail('Pastikan kata sandi cocok');
+      showDialogFail(context, message: 'Pastikan kata sandi cocok');
     }
   }
-
-  bool usernameValidation(TextEditingController username) {
-    return _userController.text.length >= 3;
-  }
-
-  void _showDialogSucces() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return SuccesAlertState(
-          message: "Berhasil Daftar",
-          onPressed: () => Navigator.pushNamed(context, '/main_page'),
-        );
-      },
-    );
-  }
-
-  void _showDialogFail(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return FailAlertState(
-          message: message,
-          onPressed: () => Navigator.pop(context),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(0, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(0, 0, 0, 0),
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Daftar",
                 style: TextStyle(
                   fontFamily: "Inter",
@@ -122,71 +98,71 @@ class _RegisterPageState extends State<RegisterPage> {
                   letterSpacing: 3,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Nama",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
                     text: "Masukan nama",
                     controller: _userController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
                     text: "Masukan alamat email",
                     controller: _emailController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputPassword(
                     text: "Masukan kata sandi",
                     controller: _passwordController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Konfirmasi kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputPassword(
@@ -195,26 +171,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 100,
               ),
               LongButton(
                 text: "Daftar",
                 onPressed: _signUp,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Sudah punya akun?"),
+                  const Text("Sudah punya akun?"),
                   Container(
-                    padding: EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(left: 5),
                     child: Gesture(
                       text: "Masuk",
                       onTap: () {
-                        Navigator.pushNamed(context, '/main_page');
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const AuthLogin()));
                       },
                     ),
                   ),

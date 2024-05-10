@@ -1,35 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/alert.dart';
-import 'package:gencoff_app/utils/long_button.dart';
-import 'package:gencoff_app/utils/input.dart';
+import 'package:gencoff_app/view_models/auth/auth_login.dart';
+import 'package:gencoff_app/widgets/alert.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
+import 'package:gencoff_app/widgets/input.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+  const ForgotPasswordPage({super.key});
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  // untuk menyimpan email
   final TextEditingController _controllerEmail = TextEditingController();
 
   @override
   void dispose() {
+    // ketika pindah page maka input kembali kosong
     _controllerEmail.dispose();
     super.dispose();
   }
 
   Future<void> _passwordReset() async {
     final email = _controllerEmail.text.trim();
+    // get email yang ada di firestore
     final userDoc = await FirebaseFirestore.instance
-        .collection('users') // Replace 'users' with your collection name
+        .collection('users') 
         .where('email', isEqualTo: email) // Use email as document ID
         .get();
-
-    if (!userDoc.docs.isEmpty) {
-      
+    
+    if (userDoc.docs.isEmpty) {
         await FirebaseAuth.instance
             .sendPasswordResetEmail(email: _controllerEmail.text.trim());
         _showDialogSuccess('Link reset kata sandi berhasil terkirim, cek alamat email anda!');
@@ -53,7 +56,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return SuccesAlertState(message: message, onPressed: () => Navigator.pushNamed(context, '/main_page'));
+        return SuccesAlertState(message: message, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> const AuthLogin())));
       },
     );
   }
@@ -66,11 +69,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Lupa Password",
                 style: TextStyle(
                   fontFamily: "Inter",
@@ -83,20 +86,20 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 'assets/images/forgot_password.png',
                 width: 250,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
@@ -105,7 +108,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 200,
               ),
               LongButton(

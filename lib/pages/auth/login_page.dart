@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/alert.dart';
-import 'package:gencoff_app/utils/long_button.dart';
-import 'package:gencoff_app/utils/gesture_detector.dart';
-import 'package:gencoff_app/utils/input.dart';
+import 'package:gencoff_app/utils/show_dialog.dart';
+import 'package:gencoff_app/utils/validasi_email.dart';
+import 'package:gencoff_app/view_models/auth/login_view_model.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
+import 'package:gencoff_app/widgets/gesture_detector.dart';
+import 'package:gencoff_app/widgets/input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gencoff_app/providers/firebase_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -24,83 +25,65 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<void> _signInWithEmailAndPassword() async {
-    if (_isValidEmail(_controllerEmail.text.trim())) {
+  Future<void> signInWithEmailAndPassword() async {
+    if (isValidEmail(_controllerEmail.text.trim())) {
       try {
-        await Firebase().signInWithEmailAndPassword(
+        await LoginViewModel().signIn(
             email: _controllerEmail.text.trim(),
             password: _controllerPassword.text.trim());
-        _showDialogSucces();
+        // ignore: use_build_context_synchronously
+        showDialogSucces(context ,message: 'Berhasil masuk');
       } on FirebaseAuthException catch (e) {
         switch ('${e.code}') {
           case 'user-disabled':
-            _showDialogFail("Akun anda dinonaktifkan oleh administrator");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context,
+                message: "Akun anda dinonaktifkan oleh administrator");
             break;
           case 'channel-error':
-            _showDialogFail("Data tidak boleh kosong!");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context, message: "Data tidak boleh kosong!");
             break;
           case 'user-not-found':
-            _showDialogFail(
-                "Email yang anda masukkan tidak terdaftar sebagai pengguna");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context,
+                message:
+                    "Email yang anda masukkan tidak terdaftar sebagai pengguna");
             break;
           case 'too-many-requests':
-            _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context, message: "Terlalu banyak permintaan, coba lagi nanti");
             break;
           case 'network-request-failed':
-            _showDialogFail(
-                "Terdapat kesalahan dalam jaringan, coba lagi nanti");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context,message: "Terdapat kesalahan dalam jaringan, coba lagi nanti"
+                );
             break;
           case 'invalid-credential':
-            _showDialogFail("Alamat email dan kata sandi yang anda masukan salah");
+            // ignore: use_build_context_synchronously
+            showDialogFail(context, message: "Alamat email dan kata sandi yang anda masukan salah",
+                );
             break;
           default:
-            _showDialogFail('${e.code}: ${e.message}');
+            showDialogFail(context ,message: '${e.code}: ${e.message}');
         }
       }
     } else {
-      _showDialogFail("Pastiksn alamat email valid");
+      showDialogFail(context ,message: "Pastiksn alamat email valid");
     }
-  }
-
-  bool _isValidEmail(String email) {
-    // Gunakan ekspresi reguler atau pustaka validasi email untuk memeriksa format email
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-  }
-
-  void _showDialogSucces() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return SuccesAlertState(
-          message: "Berhasil Masuk",
-          onPressed: () => Navigator.pop(context),
-        );
-      },
-    );
-  }
-
-  void _showDialogFail(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return FailAlertState(
-          message: message,
-          onPressed: () => Navigator.pop(context),
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 80),
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 80),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Masuk",
                 style: TextStyle(
                   fontFamily: 'Inter',
@@ -109,39 +92,39 @@ class _LoginPageState extends State<LoginPage> {
                   letterSpacing: 3,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Image.asset('assets/images/logo.png', width: 100),
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
                     text: "Masukan alamat email",
                     controller: _controllerEmail,
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     "Kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputPassword(
@@ -150,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
@@ -164,25 +147,25 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 140),
+              const SizedBox(height: 100),
               LongButton(
                 text: "Masuk",
-                onPressed: _signInWithEmailAndPassword,
+                onPressed: signInWithEmailAndPassword,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Belum punya akun?",
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
                         fontWeight: FontWeight.w400),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Gesture(
@@ -200,3 +183,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+// routes
+// login (1) -> resetPassword -> login(1) 
