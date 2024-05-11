@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/pages/Homepage/first_page.dart';
+import 'package:gencoff_app/utils/bottom_navigasi.dart';
 import 'package:gencoff_app/pages/auth/login_page.dart';
-import 'package:gencoff_app/providers/firebase_provider.dart';
+import 'package:gencoff_app/view_model/firebase_provider.dart';
 
-class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key); // Perbaikan pada konstruktor
+class AuthLogin extends StatelessWidget {
+  const AuthLogin({Key? key}) : super(key: key); // Perbaikan pada konstruktor
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class MainPage extends StatelessWidget {
             );
           } else if (snapshot.hasData && snapshot.data != null) {
             // Jika ada pengguna yang masuk, tampilkan FirstPage
-            return FirstPage();
+            return BottomNavigasi();
           } else {
             // Jika tidak ada pengguna yang masuk, tampilkan LoginPage
             return LoginPage();

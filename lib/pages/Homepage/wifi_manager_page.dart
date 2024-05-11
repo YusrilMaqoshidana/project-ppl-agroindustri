@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gencoff_app/utils/input.dart';
-import 'package:gencoff_app/utils/long_button.dart';
+import 'package:gencoff_app/widgets/input.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
 
 class WifiManager extends StatelessWidget {
   WifiManager({super.key});

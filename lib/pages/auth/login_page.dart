@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/alert.dart';
-import 'package:gencoff_app/utils/long_button.dart';
-import 'package:gencoff_app/utils/gesture_detector.dart';
-import 'package:gencoff_app/utils/input.dart';
+import 'package:gencoff_app/widgets/alert.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
+import 'package:gencoff_app/widgets/gesture_detector.dart';
+import 'package:gencoff_app/widgets/input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gencoff_app/providers/firebase_provider.dart';
+import 'package:gencoff_app/view_model/firebase_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
     } else {
-      _showDialogFail("Pastiksn alamat email valid");
+      _showDialogFail("Pastikan alamat email valid");
     }
   }
 
@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) {
         return SuccesAlertState(
           message: "Berhasil Masuk",
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/main_page'),
         );
       },
     );
@@ -96,11 +96,11 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 80),
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 80),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Masuk",
                 style: TextStyle(
                   fontFamily: 'Inter',
@@ -109,39 +109,39 @@ class _LoginPageState extends State<LoginPage> {
                   letterSpacing: 3,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Image.asset('assets/images/logo.png', width: 100),
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
                     text: "Masukan alamat email",
                     controller: _controllerEmail,
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     "Kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputPassword(
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
@@ -164,25 +164,25 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 140),
+              const SizedBox(height: 140),
               LongButton(
                 text: "Masuk",
                 onPressed: _signInWithEmailAndPassword,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Belum punya akun?",
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
                         fontWeight: FontWeight.w400),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Gesture(

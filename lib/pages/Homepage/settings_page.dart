@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/providers/firebase_provider.dart';
-import 'package:gencoff_app/utils/long_button.dart';
+import 'package:gencoff_app/view_model/firebase_provider.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -10,7 +10,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 Widget _title() {
-  return Text(
+  return const Text(
     "Settings",
     style: TextStyle(
         color: Colors.white, fontFamily: "Inter", fontWeight: FontWeight.w700),
@@ -55,27 +55,11 @@ Future<void> signOut() async {
 
 Widget _signOutButton() {
   return Container(
-    margin: EdgeInsets.all(25),
-    child: LongButton(text: "Keluar", onPressed: signOut),
+    margin: const EdgeInsets.all(25),
+    child: const LongButton(text: "Keluar", onPressed: signOut),
   );
 }
 
-Future<Map<String, String>> _fetchUserDetails() async {
-  try {
-    final userData = await Firebase()
-        .getUserDetails(); // Assuming FirebaseProvider has getUserDetails
-
-    if (userData.exists) {
-      return {'username': userData['username'], 'email': userData['email']};
-    } else {
-      print("User details not found or user is not logged in.");
-      return {}; // Return empty map if no data found
-    }
-  } catch (e) {
-    print("Error fetching user details: $e");
-    return {}; // Return empty map on error
-  }
-}
 
 class _SettingsPageState extends State<SettingsPage> {
   Map<String, dynamic> _dataUser = {};
@@ -95,7 +79,6 @@ class _SettingsPageState extends State<SettingsPage> {
         _isLoading = false;
       });
     } catch (e) {
-      print("Error fetching user details: $e");
       setState(() {
         _isLoading = false; // Setelah data gagal dimuat, tidak lagi loading
       });
@@ -122,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(
                     height: 50,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.person,
                     size: 72,
                     color: Colors.brown,

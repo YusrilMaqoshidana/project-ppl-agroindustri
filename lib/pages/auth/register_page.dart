@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/providers/firebase_provider.dart';
-import 'package:gencoff_app/utils/long_button.dart';
-import 'package:gencoff_app/utils/gesture_detector.dart';
-import 'package:gencoff_app/utils/input.dart';
-import 'package:gencoff_app/utils/alert.dart';
+import 'package:gencoff_app/view_model/firebase_provider.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
+import 'package:gencoff_app/widgets/gesture_detector.dart';
+import 'package:gencoff_app/widgets/input.dart';
+import 'package:gencoff_app/widgets/alert.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
@@ -31,8 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _signUp() async {
     if (_passwordController.text.trim() ==
-            _passwordConfirmController.text.trim() &&
-        usernameValidation(_userController)) {
+            _passwordConfirmController.text.trim()) {
       try {
         await Firebase().createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
@@ -48,9 +47,6 @@ class _RegisterPageState extends State<RegisterPage> {
             break;
           case 'channel-error':
             _showDialogFail("Data tidak boleh kosong!");
-            break;
-          case 'weak-password':
-            _showDialogFail("Pastikan kata sandi lebih dari 6 karakter");
             break;
           case 'email-already-in-use':
             _showDialogFail("Alamat email yang anda masukan sudah terdaftar");
@@ -83,7 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context) {
         return SuccesAlertState(
           message: "Berhasil Daftar",
-          onPressed: () => Navigator.pushNamed(context, '/main_page'),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
         );
       },
     );
@@ -105,15 +101,15 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(0, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(0, 0, 0, 0),
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Daftar",
                 style: TextStyle(
                   fontFamily: "Inter",
@@ -122,71 +118,71 @@ class _RegisterPageState extends State<RegisterPage> {
                   letterSpacing: 3,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Nama",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
                     text: "Masukan nama",
                     controller: _userController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
                     text: "Masukan alamat email",
                     controller: _emailController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputPassword(
                     text: "Masukan kata sandi",
                     controller: _passwordController,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Konfirmasi kata sandi",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputPassword(
@@ -195,26 +191,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 100,
               ),
               LongButton(
                 text: "Daftar",
                 onPressed: _signUp,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Sudah punya akun?"),
+                  const Text("Sudah punya akun?"),
                   Container(
-                    padding: EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(left: 5),
                     child: Gesture(
                       text: "Masuk",
                       onTap: () {
-                        Navigator.pushNamed(context, '/main_page');
+                        Navigator.pushNamed(context, '/login');
                       },
                     ),
                   ),

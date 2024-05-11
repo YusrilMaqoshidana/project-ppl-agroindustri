@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/long_button.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
 
 class SuccesAlertState extends StatelessWidget {
   SuccesAlertState({Key? key, required this.message, required this.onPressed})

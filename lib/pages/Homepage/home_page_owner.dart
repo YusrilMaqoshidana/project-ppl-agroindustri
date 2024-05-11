@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/circle_button.dart';
-import 'package:gencoff_app/utils/long_button.dart';
+import 'package:gencoff_app/widgets/circle_button.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});

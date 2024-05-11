@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/utils/alert.dart';
-import 'package:gencoff_app/utils/long_button.dart';
-import 'package:gencoff_app/utils/input.dart';
+import 'package:gencoff_app/widgets/alert.dart';
+import 'package:gencoff_app/widgets/long_button.dart';
+import 'package:gencoff_app/widgets/input.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -28,8 +28,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         .where('email', isEqualTo: email) // Use email as document ID
         .get();
 
-    if (!userDoc.docs.isEmpty) {
-      
+    if (userDoc.docs.isNotEmpty) {
         await FirebaseAuth.instance
             .sendPasswordResetEmail(email: _controllerEmail.text.trim());
         _showDialogSuccess('Link reset kata sandi berhasil terkirim, cek alamat email anda!');

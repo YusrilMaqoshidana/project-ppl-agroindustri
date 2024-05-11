@@ -3,14 +3,14 @@ import 'package:gencoff_app/pages/Homepage/home_page_owner.dart';
 import 'package:gencoff_app/pages/Homepage/history_page.dart';
 import 'package:gencoff_app/pages/Homepage/settings_page.dart';
 
-class FirstPage extends StatefulWidget {
-  FirstPage({super.key});
+class BottomNavigasi extends StatefulWidget {
+  BottomNavigasi({super.key});
 
   @override
-  State<FirstPage> createState() => _FirstPageState();
+  State<BottomNavigasi> createState() => _BottomNavigasiState();
 }
 
-class _FirstPageState extends State<FirstPage> {
+class _BottomNavigasiState extends State<BottomNavigasi> {
   get bottomNavigationBar => null;
 
   int _selectedIndex = 0;
