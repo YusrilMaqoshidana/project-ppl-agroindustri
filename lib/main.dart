@@ -1,0 +1,33 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:gencoff_app/firebase_options.dart';
+import 'package:flutter/material.dart';
+import 'package:gencoff_app/pages/auth/login_page.dart';
+import 'package:gencoff_app/utils/auth_login.dart';
+import 'package:gencoff_app/pages/Homepage/wifi_manager_page.dart';
+import 'package:gencoff_app/pages/auth/forgot_password_page.dart';
+import 'package:gencoff_app/pages/auth/register_page.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const Gencoff());
+}
+
+class Gencoff extends StatelessWidget {
+  const Gencoff({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/main_page': (context) => AuthLogin(),
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        '/forgot_password': (context) => ForgotPasswordPage(),
+        '/wifi_manager': (context)=> WifiManager()
+      },
+      home: AuthLogin(),
+    );
+  }
+}
