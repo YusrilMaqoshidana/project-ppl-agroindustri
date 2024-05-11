@@ -9,6 +9,11 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
+bool editUsername = false;
+bool editEmail = false;
+final newUsername = TextEditingController();
+final newEmail = TextEditingController();
+
 Widget _title() {
   return const Text(
     "Settings",
@@ -17,14 +22,14 @@ Widget _title() {
   );
 }
 
-Widget _textBox(String subjudul, String data) {
+Widget _textBox(String subjudul, String data, VoidCallback onPressed) {
   return Container(
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(8),
     ),
-    padding: EdgeInsets.only(left: 15, bottom: 15),
-    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+    padding: const EdgeInsets.only(left: 15, bottom: 15),
+    margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,14 +41,39 @@ Widget _textBox(String subjudul, String data) {
               style: TextStyle(color: Colors.grey[500]),
             ),
             IconButton(
-                onPressed: () {},
-                icon: Icon(
+                onPressed: onPressed,
+                icon: const Icon(
                   Icons.edit,
                   size: 20,
                 ))
           ],
         ),
         Text(data),
+      ],
+    ),
+  );
+}
+
+Widget _textField(
+    String subjudul, TextEditingController controller, String data) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    padding: const EdgeInsets.only(left: 15, bottom: 15),
+    margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          subjudul,
+          style: TextStyle(color: Colors.grey[500]),
+        ),
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(hintText: data),
+        ),
       ],
     ),
   );
@@ -59,7 +89,6 @@ Widget _signOutButton() {
     child: const LongButton(text: "Keluar", onPressed: signOut),
   );
 }
-
 
 class _SettingsPageState extends State<SettingsPage> {
   Map<String, dynamic> _dataUser = {};
@@ -95,38 +124,84 @@ class _SettingsPageState extends State<SettingsPage> {
           title: _title(),
           backgroundColor: Colors.brown,
         ),
-        body: Container(
-          decoration: BoxDecoration(color: Colors.grey[200]),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  const Icon(
-                    Icons.person,
-                    size: 72,
-                    color: Colors.brown,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "P R O F I L",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  _textBox("Nama Lengkap", _dataUser['username']),
-                  _textBox("Alamat email", _dataUser['email']),
-                ],
-              ),
-              _signOutButton(),
-            ],
+        body: SingleChildScrollView(
+          child: Container(
+            height: 700,
+            decoration: BoxDecoration(color: Colors.grey[200]),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    const Icon(
+                      Icons.person,
+                      size: 72,
+                      color: Colors.brown,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      "P R O F I L",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    !editUsername
+                        ? _textBox("Nama Lengkap", _dataUser['username'], () {
+                            setState(() {
+                              editUsername = !editUsername;
+                            });
+                          })
+                        : _textField(
+                            "Nama Lengkap", newUsername, _dataUser['username']),
+                    !editUsername
+                        ? const SizedBox(
+                            height: 0,
+                          )
+                        : Container(
+                        margin: const EdgeInsets.all(25),
+                        child: LongButton(
+                            text: "Simpan",
+                            onPressed: () {
+                              setState(() {
+                                Firebase().updateUsername(newUsername.text.trim());
+                                editUsername = !editUsername;
+                              });
+                            })),
+                    !editEmail
+                        ? _textBox("Alamat Email", _dataUser['email'], () {
+                            setState(() {
+                              Firebase().updateEmail(newEmail.text.trim());
+                              editEmail = !editEmail;
+                            });
+                          })
+                        : _textField(
+                            "Alamat Email", newEmail, _dataUser['email']),
+                    !editEmail
+                        ? const SizedBox(
+                            height: 0,
+                          )
+                        : Container(
+                            margin: const EdgeInsets.all(25),
+                            child: LongButton(
+                                text: "Simpan",
+                                onPressed: () {
+                                  setState(() {
+                                    editEmail = !editEmail;
+                                  });
+                                })),
+                  ],
+                ),
+                _signOutButton()
+              ],
+            ),
           ),
         ),
       );
