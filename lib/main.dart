@@ -24,7 +24,7 @@ class Gencoff extends StatelessWidget {
         '/forgot_password': (context) => ForgotPasswordPage(),
         '/wifi_manager': (context)=> WifiManager()
       },
-      home: const AuthLogin(),
+      home: AuthLogin(),
     );
   }
 }

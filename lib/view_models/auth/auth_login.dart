@@ -1,17 +1,17 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/models/firebase_model.dart';
 import 'package:gencoff_app/utils/bottom_navigasi.dart';
 import 'package:gencoff_app/pages/auth/login_page.dart';
 
 class AuthLogin extends StatelessWidget {
-  const AuthLogin({super.key}); // Perbaikan pada konstruktor
-
+  AuthLogin({super.key}); // Perbaikan pada konstruktor
+  final Stream<User?> _auth = FirebaseAuth.instance.authStateChanges();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<User?>(
-        stream: FirebaseModel().authStateChanges,
+        stream: _auth,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Tampilkan indikator loading jika stream sedang menunggu

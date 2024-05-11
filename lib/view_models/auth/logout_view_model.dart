@@ -1,7 +1,8 @@
-import 'package:gencoff_app/models/firebase_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Logout{
-   Future<void> signOut() async {
-    await FirebaseModel().firebaseAuth.signOut();
+class LogoutViewModel {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }

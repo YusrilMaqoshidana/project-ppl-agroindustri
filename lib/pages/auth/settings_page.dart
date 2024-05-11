@@ -11,7 +11,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 Widget _title() {
-  return Text(
+  return const Text(
     "Settings",
     style: TextStyle(
         color: Colors.white, fontFamily: "Inter", fontWeight: FontWeight.w700),
@@ -24,8 +24,8 @@ Widget _textBox(String subjudul, String data) {
       color: Colors.white,
       borderRadius: BorderRadius.circular(8),
     ),
-    padding: EdgeInsets.only(left: 15, bottom: 15),
-    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+    padding: const EdgeInsets.only(left: 15, bottom: 15),
+    margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,7 +38,7 @@ Widget _textBox(String subjudul, String data) {
             ),
             IconButton(
                 onPressed: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.edit,
                   size: 20,
                 ))
@@ -50,32 +50,15 @@ Widget _textBox(String subjudul, String data) {
   );
 }
 
-Future<void> signOut() async {
-  await Logout().signOut();
-}
-
 Widget _signOutButton() {
   return Container(
-    margin: EdgeInsets.all(25),
-    child: LongButton(text: "Keluar", onPressed: signOut),
+    margin: const EdgeInsets.all(25),
+    child: LongButton(
+        text: "Keluar",
+        onPressed: () {
+          LogoutViewModel().signOut();
+        }),
   );
-}
-
-Future<Map<String, String>> _fetchUserDetails() async {
-  try {
-    final userData = await ReadProfileViewModel()
-        .getUserDetails(); // Assuming FirebaseProvider has getUserDetails
-
-    if (userData.exists) {
-      return {'username': userData['username'], 'email': userData['email']};
-    } else {
-      print("User details not found or user is not logged in.");
-      return {}; // Return empty map if no data found
-    }
-  } catch (e) {
-    print("Error fetching user details: $e");
-    return {}; // Return empty map on error
-  }
 }
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -123,7 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(
                     height: 50,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.person,
                     size: 72,
                     color: Colors.brown,
@@ -131,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "P R O F I L",
                     textAlign: TextAlign.center,
                     style: TextStyle(

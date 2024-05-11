@@ -1,10 +1,9 @@
-import 'package:gencoff_app/models/firebase_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginViewModel{
-  Future<void> signIn(
-      {required String email, required String password}) async {
-    await FirebaseModel().firebaseAuth
+class LoginViewModel {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> signIn({required String email, required String password}) async {
+    await _auth
         .signInWithEmailAndPassword(email: email, password: password);
   }
-
 }

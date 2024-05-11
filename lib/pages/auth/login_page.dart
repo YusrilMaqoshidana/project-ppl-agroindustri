@@ -25,42 +25,35 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<void> signInWithEmailAndPassword() async {
+  Future<void> signIn() async {
     if (isValidEmail(_controllerEmail.text.trim())) {
       try {
         await LoginViewModel().signIn(
             email: _controllerEmail.text.trim(),
             password: _controllerPassword.text.trim());
-        // ignore: use_build_context_synchronously
         showDialogSucces(context ,message: 'Berhasil masuk');
       } on FirebaseAuthException catch (e) {
         switch ('${e.code}') {
           case 'user-disabled':
-            // ignore: use_build_context_synchronously
             showDialogFail(context,
                 message: "Akun anda dinonaktifkan oleh administrator");
             break;
           case 'channel-error':
-            // ignore: use_build_context_synchronously
             showDialogFail(context, message: "Data tidak boleh kosong!");
             break;
           case 'user-not-found':
-            // ignore: use_build_context_synchronously
             showDialogFail(context,
                 message:
                     "Email yang anda masukkan tidak terdaftar sebagai pengguna");
             break;
           case 'too-many-requests':
-            // ignore: use_build_context_synchronously
             showDialogFail(context, message: "Terlalu banyak permintaan, coba lagi nanti");
             break;
           case 'network-request-failed':
-            // ignore: use_build_context_synchronously
             showDialogFail(context,message: "Terdapat kesalahan dalam jaringan, coba lagi nanti"
                 );
             break;
           case 'invalid-credential':
-            // ignore: use_build_context_synchronously
             showDialogFail(context, message: "Alamat email dan kata sandi yang anda masukan salah",
                 );
             break;
@@ -150,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 100),
               LongButton(
                 text: "Masuk",
-                onPressed: signInWithEmailAndPassword,
+                onPressed: signIn,
               ),
               const SizedBox(
                 height: 20,
