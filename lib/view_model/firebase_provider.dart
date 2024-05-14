@@ -40,7 +40,6 @@ class Firebase extends ChangeNotifier {
 
   Future<void> updateEmail(String newEmail) async {
     await _firebaseAuth.currentUser?.verifyBeforeUpdateEmail(newEmail);
-    // Update email in Firestore
     String uid = _firebaseAuth.currentUser!.uid;
     await _firestore.collection("users").doc(uid).update({
       'email': newEmail,
@@ -49,11 +48,12 @@ class Firebase extends ChangeNotifier {
   }
 
   Future<void> updateUsername(String newUsername) async {
-    String uid = currentUser!.uid;
-    await _firestore.collection("users").doc(uid).update({
-      'username': newUsername,
-    });
-    notifyListeners();
+    try {
+      String uid = currentUser!.uid;
+      await _firestore.collection("users").doc(uid).update({
+        'username': newUsername,
+      });
+    } catch (err) {}
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
