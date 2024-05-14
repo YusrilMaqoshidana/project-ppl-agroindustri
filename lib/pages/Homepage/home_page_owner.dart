@@ -27,15 +27,12 @@ class _HomePageState extends State<HomePage> {
   bool isEdit = false;
 
   Widget _title() {
-    return Container(
-      margin: EdgeInsets.only(left: 25),
-      child: Text(
-        "Gencoff",
-        style: TextStyle(
-            color: Colors.white,
-            fontFamily: "Inter",
-            fontWeight: FontWeight.w700),
-      ),
+    return Text(
+      "Gencoff",
+      style: TextStyle(
+          color: Colors.white,
+          fontFamily: "Inter",
+          fontWeight: FontWeight.w700),
     );
   }
 
@@ -327,7 +324,7 @@ class _HomePageState extends State<HomePage> {
             ),
             _cardForm(),
             SizedBox(height: 20,),
-            Container(margin: EdgeInsets.all(25),child: !isEdit ? LongButton(text: "Selesai", onPressed: (){}) : LongButtonNonAktif(text: "Selesai")),
+            Container(margin: EdgeInsets.all(25),child: !isEdit ? LongButton(text: "Selesai", onPressed: (){}) : LongButtonNonAktif(text: "Selesai", onPressed: (){},)),
             SizedBox(height: 20,),
           ],
         )),

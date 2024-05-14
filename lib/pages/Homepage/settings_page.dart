@@ -1,32 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/view_model/firebase_provider.dart';
+import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  SettingsPage({Key? key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-bool editUsername = false;
-bool editEmail = false;
-final newUsername = TextEditingController();
-final newEmail = TextEditingController();
+TextEditingController valueController = TextEditingController();
+bool _isEdit = false;
+late User? currentUser;
+final users = FirebaseFirestore.instance.collection("users");
 
 Widget _title() {
   return const Text(
-    "Settings",
+    "Pengaturan",
     style: TextStyle(
         color: Colors.white, fontFamily: "Inter", fontWeight: FontWeight.w700),
   );
 }
 
-Widget _textBox(String subjudul, String data, VoidCallback onPressed) {
+Widget _textBox(String subjudul, String data, {IconButton? iconButton}) {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(
+          color: Colors.grey.withOpacity(0.5), width: 2), // Menambahkan border
     ),
     padding: const EdgeInsets.only(left: 15, bottom: 15),
     margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -36,43 +40,50 @@ Widget _textBox(String subjudul, String data, VoidCallback onPressed) {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              subjudul,
-              style: TextStyle(color: Colors.grey[500]),
+            Container(
+              margin: const EdgeInsets.only(top: 20, bottom: 10),
+              child: Text(
+                subjudul,
+                style: const TextStyle(color: Colors.black),
+              ),
             ),
-            IconButton(
-                onPressed: onPressed,
-                icon: const Icon(
-                  Icons.edit,
-                  size: 20,
-                ))
+            iconButton ?? const SizedBox(),
           ],
         ),
-        Text(data),
+        Text(
+          data,
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
       ],
     ),
   );
 }
 
-Widget _textField(
-    String subjudul, TextEditingController controller, String data) {
+Widget _textField(String subjudul) {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(
+          color: Colors.grey.withOpacity(0.5), width: 2), // Menambahkan border
     ),
     padding: const EdgeInsets.only(left: 15, bottom: 15),
     margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          subjudul,
-          style: TextStyle(color: Colors.grey[500]),
+        Container(
+          margin: const EdgeInsets.only(top: 20, bottom: 10),
+          child: Text(
+            subjudul,
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         TextField(
-          controller: controller,
-          decoration: InputDecoration(hintText: data),
+          controller: valueController,
+          style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+          decoration: InputDecoration(
+              hintText: "Masukan nama baru",
+              hintStyle: TextStyle(color: Colors.grey)),
         ),
       ],
     ),
@@ -83,128 +94,142 @@ Future<void> signOut() async {
   await Firebase().signOut();
 }
 
-Widget _signOutButton() {
-  return Container(
-    margin: const EdgeInsets.all(25),
-    child: const LongButton(text: "Keluar", onPressed: signOut),
-  );
-}
-
 class _SettingsPageState extends State<SettingsPage> {
-  Map<String, dynamic> _dataUser = {};
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    currentUser = Firebase().currentUser;
   }
 
-  Future<void> _fetchData() async {
-    try {
-      final userData = await Firebase().getUserDetails();
-      setState(() {
-        _dataUser = userData.data() as Map<String, dynamic>;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false; // Setelah data gagal dimuat, tidak lagi loading
-      });
+  Future<void> _updateUsername() async {
+    if (valueController.text.isEmpty) {
+      FailAlertState(
+        message: "Pastikan input nama tidak kosong",
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      try {
+        // Perbarui nama pengguna di Firebase Auth
+        await Firebase().updateUsername(valueController.text.trim());
+
+        // Perbarui nama pengguna di Firestore
+        await users
+            .doc(currentUser?.uid)
+            .update({'username': valueController.text});
+
+        // Setelah data diperbarui, kembali ke tampilan non-edit
+        setState(() {
+          _isEdit = !_isEdit;
+        });
+      } catch (error) {
+        print("Gagal memperbarui nama pengguna: $error");
+        // Tampilkan pesan kesalahan jika gagal memperbarui
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    } else {
-      return Scaffold(
-        appBar: AppBar(
-          title: _title(),
-          backgroundColor: Colors.brown,
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: 700,
-            decoration: BoxDecoration(color: Colors.grey[200]),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      appBar: AppBar(
+        title: _title(),
+        backgroundColor: Colors.brown,
+      ),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser?.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final userData = snapshot.data!.data() as Map<String, dynamic>;
+            return ListView(
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    const Icon(
-                      Icons.person,
-                      size: 72,
-                      color: Colors.brown,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      "P R O F I L",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    !editUsername
-                        ? _textBox("Nama Lengkap", _dataUser['username'], () {
-                            setState(() {
-                              editUsername = !editUsername;
-                            });
-                          })
-                        : _textField(
-                            "Nama Lengkap", newUsername, _dataUser['username']),
-                    !editUsername
-                        ? const SizedBox(
-                            height: 0,
-                          )
-                        : Container(
-                        margin: const EdgeInsets.all(25),
-                        child: LongButton(
-                            text: "Simpan",
+                const SizedBox(
+                  height: 50,
+                ),
+                const Center(
+                  child: Text(
+                    "Profile",
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Container(child: _textBox("Email:", userData['email'])),
+                _isEdit
+                    ? _textBox("Nama:", userData['username'],
+                        iconButton: IconButton(
                             onPressed: () {
                               setState(() {
-                                Firebase().updateUsername(newUsername.text.trim());
-                                editUsername = !editUsername;
+                                _isEdit = !_isEdit;
                               });
-                            })),
-                    !editEmail
-                        ? _textBox("Alamat Email", _dataUser['email'], () {
-                            setState(() {
-                              Firebase().updateEmail(newEmail.text.trim());
-                              editEmail = !editEmail;
-                            });
-                          })
-                        : _textField(
-                            "Alamat Email", newEmail, _dataUser['email']),
-                    !editEmail
-                        ? const SizedBox(
-                            height: 0,
-                          )
-                        : Container(
-                            margin: const EdgeInsets.all(25),
+                            },
+                            icon: const Icon(Icons.edit)))
+                    : _textField("Nama:"),
+                !_isEdit
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            width: 150,
+                            child: LongButtonNonAktif(
+                                text: "Batal",
+                                onPressed: () {
+                                  setState(() {
+                                    _isEdit = !_isEdit;
+                                  });
+                                }),
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            width: 150,
                             child: LongButton(
                                 text: "Simpan",
                                 onPressed: () {
-                                  setState(() {
-                                    editEmail = !editEmail;
-                                  });
-                                })),
-                  ],
+                                  _updateUsername();
+                                }),
+                          )
+                        ],
+                      )
+                    : const SizedBox(
+                        height: 40,
+                      ),
+                const SizedBox(
+                  height: 150,
                 ),
-                _signOutButton()
+                _isEdit
+                    ? Container(
+                        margin: const EdgeInsets.all(25),
+                        child: LongButton(
+                            text: "Keluar",
+                            onPressed: () {
+                              signOut();
+                            }),
+                      )
+                    : SizedBox()
               ],
-            ),
-          ),
-        ),
-      );
-    }
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error" + snapshot.error.toString()),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
   }
 }
