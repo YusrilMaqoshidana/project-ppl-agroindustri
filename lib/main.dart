@@ -21,13 +21,13 @@ class Gencoff extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        '/main_page': (context) => AuthLogin(),
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/forgot_password': (context) => ForgotPasswordPage(),
-        '/wifi_manager': (context)=> WifiManager()
+        '/forgot_password': (context) => const ForgotPasswordPage(),
+        '/wifi_manager': (context)=> WifiManager(),
+        '/auth_login': (context) => const AuthLogin(),
       },
-      home: AuthLogin(),
+      home: const AuthLogin(),
     );
   }
 }

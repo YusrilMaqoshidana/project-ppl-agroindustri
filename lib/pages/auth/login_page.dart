@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) {
         return SuccesAlertState(
           message: "Berhasil Masuk",
-          onPressed: () => Navigator.pushReplacementNamed(context, '/main_page'),
+          onPressed: () => Navigator.pop(context),
         );
       },
     );

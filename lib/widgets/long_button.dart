@@ -34,7 +34,8 @@ class LongButton extends StatelessWidget {
 
 class LongButtonNonAktif extends StatelessWidget {
   final String text;
-  const LongButtonNonAktif({Key? key, required this.text}) : super(key: key);
+  final VoidCallback onPressed;
+  const LongButtonNonAktif({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +45,19 @@ class LongButtonNonAktif extends StatelessWidget {
       child: ElevatedButton(
         style: ButtonStyle(
           side: MaterialStateProperty.all<BorderSide>(
-            BorderSide(
-                color: Colors.grey), // Atur warna dan ketebalan garis di sini
+            const BorderSide(
+                color: Colors.brown), // Atur warna dan ketebalan garis di sini
           ),
         ),
-        onPressed: () {},
+        onPressed: onPressed,
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
               fontSize: 16,
               letterSpacing: 3,
-              color: Colors.grey),
+              color: Colors.brown),
         ),
       ),
     );
