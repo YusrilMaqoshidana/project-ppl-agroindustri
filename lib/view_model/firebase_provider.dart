@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class Firebase extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
@@ -25,7 +25,6 @@ class Firebase extends ChangeNotifier {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    notifyListeners();
   }
 
   Future<void> addUserDetails(
@@ -35,7 +34,6 @@ class Firebase extends ChangeNotifier {
       'username': username,
       'email': email,
     });
-    notifyListeners();
   }
 
   Future<void> updateEmail(String newEmail) async {
@@ -44,7 +42,6 @@ class Firebase extends ChangeNotifier {
     await _firestore.collection("users").doc(uid).update({
       'email': newEmail,
     });
-    notifyListeners();
   }
 
   Future<void> updateUsername(String newUsername) async {
