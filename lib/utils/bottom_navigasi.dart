@@ -22,19 +22,21 @@ class _BottomNavigasiState extends State<BottomNavigasi> {
   }
 
   final List _pages = [
-    HomePage(),
-    HistoryPage(),
-    SettingsPage(),
+    const HomePage(),
+    const HistoryPage(),
+    const SettingsPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], 
+      body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.brown, // Warna coklat untuk bottom navigation bar
+        backgroundColor:
+            Colors.brown, // Warna coklat untuk bottom navigation bar
         selectedItemColor: Colors.white, // Warna putih untuk item yang dipilih
-        unselectedItemColor: Colors.brown[200], // Warna coklat muda untuk item yang tidak dipilih
+        unselectedItemColor: Colors
+            .brown[200], // Warna coklat muda untuk item yang tidak dipilih
         currentIndex: _selectedIndex,
         onTap: _navigateBottomBar,
         items: const [

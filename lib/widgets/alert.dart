@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 
 class SuccesAlertState extends StatelessWidget {
-  SuccesAlertState({Key? key, required this.message, required this.onPressed})
-      : super(key: key);
+  const SuccesAlertState({super.key, required this.message, required this.onPressed});
 
   final String message;
   final VoidCallback onPressed;
@@ -11,7 +10,7 @@ class SuccesAlertState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Berhasil",
         style: TextStyle(
             fontFamily: 'Inter',
@@ -23,10 +22,10 @@ class SuccesAlertState extends StatelessWidget {
         height: 180,
         child: Column(
           children: [
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Image.asset('assets/images/succes.png', width: 80,),
-            SizedBox(height: 20,),
-            Text(message, style: TextStyle(
+            const SizedBox(height: 20,),
+            Text(message, style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -38,7 +37,7 @@ class SuccesAlertState extends StatelessWidget {
       ),
       actions: [
         Container(
-          margin: EdgeInsets.only(left: 20,right: 20),
+          margin: const EdgeInsets.only(left: 20,right: 20),
           child: LongButton(text: 'OK',onPressed: onPressed,
           ),
         ),
@@ -48,8 +47,7 @@ class SuccesAlertState extends StatelessWidget {
 }
 
 class FailAlertState extends StatelessWidget {
-  FailAlertState({Key? key, required this.message, required this.onPressed})
-      : super(key: key);
+  const FailAlertState({super.key, required this.message, required this.onPressed});
 
   final String message;
   final VoidCallback onPressed;
@@ -57,7 +55,7 @@ class FailAlertState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Gagal",
         style: TextStyle(
             fontFamily: 'Inter',
@@ -69,10 +67,10 @@ class FailAlertState extends StatelessWidget {
         height: 180,
         child: Column(
           children: [
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Image.asset('assets/images/fail.png', width: 80,),
-            SizedBox(height: 20,),
-            Text(message, style: TextStyle(
+            const SizedBox(height: 20,),
+            Text(message, style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -84,7 +82,7 @@ class FailAlertState extends StatelessWidget {
       ),
       actions: [
         Container(
-          margin: EdgeInsets.only(left: 20,right: 20),
+          margin: const EdgeInsets.only(left: 20,right: 20),
           child: LongButton(text: 'OK',onPressed: onPressed,
           ),
         ),
@@ -94,8 +92,7 @@ class FailAlertState extends StatelessWidget {
 }
 
 class ValidationState extends StatelessWidget {
-  ValidationState({Key? key, required this.message, required this.onPressed})
-      : super(key: key);
+  const ValidationState({super.key, required this.message, required this.onPressed});
 
   final String message;
   final VoidCallback onPressed;
@@ -107,10 +104,10 @@ class ValidationState extends StatelessWidget {
         height: 180,
         child: Column(
         children: [
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Image.asset('assets/images/validasi.png', width: 80,),
-          SizedBox(height: 20,),
-          Text(message, style: TextStyle(
+          const SizedBox(height: 20,),
+          Text(message, style: const TextStyle(
               fontFamily: 'Inter',
               fontSize: 18,
               fontWeight: FontWeight.w600),
@@ -120,8 +117,9 @@ class ValidationState extends StatelessWidget {
               ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text("No")),
-        TextButton(onPressed: onPressed, child: Text("Iya")),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text("No")),
+        const SizedBox(width: 10,),
+        TextButton(onPressed: onPressed, child: const Text("Iya")),
       ],
     );
   }

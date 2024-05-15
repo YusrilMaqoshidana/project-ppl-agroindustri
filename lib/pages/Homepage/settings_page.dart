@@ -6,7 +6,7 @@ import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key? key});
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();

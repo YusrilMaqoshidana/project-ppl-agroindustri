@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/view_model/data_ukuran_view_mode.dart';
+import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/circle_button.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -16,18 +19,29 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _merahKecilController = TextEditingController();
   final TextEditingController _merahSedangController = TextEditingController();
   final TextEditingController _merahBesarController = TextEditingController();
-  Map<String, int> _ukuranBiji = {
-    'hijauKecil': 0,
-    'hijauSedang': 0,
-    'hijauBesar': 0,
-    'merahKecil': 0,
-    'merahSedang': 0,
-    'merahBesar': 0,
-  };
+  Map<String, int> dataSensor = {'hijau': 0, 'merah': 0};
+  Map<String, int> dataUkuranHijau = {'kecil': 0, 'sedang': 0, 'besar': 0};
+  Map<String, int> dataUkuranMerah = {'kecil': 0, 'sedang': 0, 'besar': 0};
   bool isEdit = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _initializeValues();
+  }
+
+  void _initializeValues() {
+    // Isi nilai awal ke dalam variabel-variabel
+    _hijauKecilController.text = '0';
+    _hijauSedangController.text = '0';
+    _hijauBesarController.text = '0';
+    _merahKecilController.text = '0';
+    _merahSedangController.text = '0';
+    _merahBesarController.text = '0';
+  }
+
   Widget _title() {
-    return Text(
+    return const Text(
       "Gencoff",
       style: TextStyle(
           color: Colors.white,
@@ -38,12 +52,12 @@ class _HomePageState extends State<HomePage> {
 
   Widget _wifi(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(right: 25),
+        margin: const EdgeInsets.only(right: 25),
         child: IconButton(
             onPressed: () {
               Navigator.pushNamed(context, '/wifi_manager');
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.wifi,
               color: Colors.white,
             )));
@@ -60,7 +74,7 @@ class _HomePageState extends State<HomePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Biji Hijau",
               style: TextStyle(
                 fontFamily: "Inter",
@@ -68,17 +82,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.only(top: 5),
               height: 65,
               width: 150,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 color: Colors.brown,
               ),
               child: Center(
                   child: Text(
-                "${_ukuranBiji['hijauKecil']}",
-                style: TextStyle(color: Colors.white),
+                "${dataSensor['hijau']}",
+                style: const TextStyle(color: Colors.white),
               )),
             )
           ],
@@ -86,7 +100,7 @@ class _HomePageState extends State<HomePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Biji Merah",
               style: TextStyle(
                 fontFamily: "Inter",
@@ -94,17 +108,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.only(top: 5),
               height: 65,
               width: 150,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 color: Colors.brown,
               ),
               child: Center(
                   child: Text(
-                "${_ukuranBiji['merahKecil']}",
-                style: TextStyle(color: Colors.white),
+                "${dataSensor['merah']}",
+                style: const TextStyle(color: Colors.white),
               )),
             )
           ],
@@ -144,7 +158,7 @@ class _HomePageState extends State<HomePage> {
             horizontal: 10), // Padding untuk jarak antara teks dan border
         child: TextField(
           controller: controller,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'kg', // Teks yang muncul ketika TextField kosong
             border: InputBorder.none, // Menghilangkan border bawaan TextField
           ),
@@ -153,24 +167,79 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> addData() async {
+    if (dataSensor.containsValue(0) &&
+        dataUkuranHijau.containsValue(0) &&
+        dataUkuranMerah.containsValue(0)) {
+      _showDialogFail("Jangan lupa isi data ukuran anda");
+    } else {
+      try {
+        await DataSortirViewModel().addDataSensor(
+            dataSensor, dataUkuranHijau, dataUkuranMerah, context);
+        _showDialogSucces();
+      } catch (e) {
+        _showDialogFail("Data gagal ditambahkan");
+      }
+    }
+  }
+
+  void _showDialogSucces() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SuccesAlertState(
+          message: "Berhasil Masuk",
+          onPressed: () => Navigator.pop(context),
+        );
+      },
+    );
+  }
+
+  void _showDialogFail(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return FailAlertState(
+          message: message,
+          onPressed: () => Navigator.pop(context),
+        );
+      },
+    );
+  }
+
+  void _validateAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ValidationState(
+          message: message,
+          onPressed: () {
+            Navigator.of(context).pop(context);
+            addData();
+          },
+        );
+      },
+    );
+  }
+
   Widget _cardForm() {
     return Card(
         elevation: 5,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: Colors.grey, width: 2)),
+            side: const BorderSide(color: Colors.grey, width: 2)),
         child: Container(
-          padding: EdgeInsets.all(25),
+          padding: const EdgeInsets.all(25),
           height: !isEdit ? 400 : 430,
           width: 350,
-          decoration: BoxDecoration(color: Colors.white),
+          decoration: const BoxDecoration(color: Colors.white),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     "Data hasil sortir",
                     style: TextStyle(
                       fontFamily: "Inter",
@@ -184,31 +253,31 @@ class _HomePageState extends State<HomePage> {
                         });
                       },
                       child: !isEdit
-                          ? Text(
+                          ? const Text(
                               "Edit",
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 16,
                                   color: Colors.brown),
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.cancel,
                               size: 25,
                               color: Colors.red,
                             )),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
-              Text(
+              const Text(
                 "Ukuran biji hijau",
                 style: TextStyle(
                   fontFamily: "Inter",
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -216,85 +285,93 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Column(
                     children: [
-                      Text("Kecil"),
+                      const Text("Kecil"),
                       !isEdit
-                          ? _readData(_ukuranBiji['hijauKecil']!)
+                          ? _readData(dataUkuranHijau['kecil']!)
                           : _textInput(_hijauKecilController)
                     ],
                   ),
                   Column(
                     children: [
-                      Text("Sedang"),
+                      const Text("Sedang"),
                       !isEdit
-                          ? _readData(_ukuranBiji['hijauSedang']!)
+                          ? _readData(dataUkuranHijau['sedang']!)
                           : _textInput(_hijauSedangController)
                     ],
                   ),
                   Column(
                     children: [
-                      Text("Besar"),
+                      const Text("Besar"),
                       !isEdit
-                          ? _readData(_ukuranBiji['hijauBesar']!)
+                          ? _readData(dataUkuranHijau['besar']!)
                           : _textInput(_hijauBesarController)
                     ],
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Text(
+              const Text(
                 "Ukuran biji merah",
                 style: TextStyle(
                   fontFamily: "Inter",
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                 Column(
                   children: [
-                    Text("Kecil"),
+                    const Text("Kecil"),
                     !isEdit
-                        ? _readData(_ukuranBiji['merahKecil']!)
+                        ? _readData(dataUkuranMerah['kecil']!)
                         : _textInput(_merahKecilController)
                   ],
                 ),
                 Column(
                   children: [
-                    Text("Sedang"),
+                    const Text("Sedang"),
                     !isEdit
-                        ? _readData(_ukuranBiji['merahSedang']!)
+                        ? _readData(dataUkuranMerah['sedang']!)
                         : _textInput(_merahSedangController)
                   ],
                 ),
                 Column(
                   children: [
-                    Text("Besar"),
+                    const Text("Besar"),
                     !isEdit
-                        ? _readData(_ukuranBiji['merahBesar']!)
+                        ? _readData(dataUkuranMerah['besar']!)
                         : _textInput(_merahBesarController)
                   ],
                 ),
               ]),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               !isEdit
-                  ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.lock)])
+                  ? const SizedBox(
+                      height: 10,
+                    )
                   : LongButton(
                       text: "Simpan",
                       onPressed: () {
                         setState(() {
-                          _ukuranBiji['hijauKecil'] = int.parse(_hijauKecilController.text);
-                          _ukuranBiji['hijauSedang'] = int.parse(_hijauSedangController.text);
-                          _ukuranBiji['hijauBesar'] = int.parse(_hijauBesarController.text);
-                          _ukuranBiji['merahKecil'] = int.parse(_merahKecilController.text);
-                          _ukuranBiji['merahSedang'] = int.parse(_merahSedangController.text);
-                          _ukuranBiji['merahBesar'] = int.parse(_merahBesarController.text);
                           isEdit = !isEdit;
+                          dataUkuranHijau['kecil'] =
+                              int.parse(_hijauKecilController.text);
+                          dataUkuranHijau['sedang'] =
+                              int.parse(_hijauSedangController.text);
+                          dataUkuranHijau['besar'] =
+                              int.parse(_hijauBesarController.text);
+                          dataUkuranMerah['kecil'] =
+                              int.parse(_merahKecilController.text);
+                          dataUkuranMerah['sedang'] =
+                              int.parse(_merahSedangController.text);
+                          dataUkuranMerah['besar'] =
+                              int.parse(_merahBesarController.text);
                         });
                       })
             ],
@@ -305,7 +382,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
+      backgroundColor: const Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         title: _title(),
         actions: [_wifi(context)],
@@ -324,9 +401,27 @@ class _HomePageState extends State<HomePage> {
               height: 25,
             ),
             _cardForm(),
-            const SizedBox(height: 20,),
-            Container(margin: EdgeInsets.all(25),child: !isEdit ? LongButton(text: "Selesai", onPressed: (){}) : LongButtonNonAktif(text: "Selesai", onPressed: (){},)),
-            SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              margin: const EdgeInsets.all(25),
+              child: !isEdit
+                  ? LongButton(
+                      text: "Selesai",
+                      onPressed: () {
+                        _validateAlert(
+                            "Apakah anda yakin ingin menambah data?");
+                      },
+                    )
+                  : LongButtonNonAktif(
+                      text: "Selesai",
+                      onPressed: () {},
+                    ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
           ],
         )),
       ),
