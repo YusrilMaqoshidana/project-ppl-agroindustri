@@ -13,7 +13,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 TextEditingController valueController = TextEditingController();
-bool _isEdit = false;
+bool _isEdit = true;
 late User? currentUser;
 final users = FirebaseFirestore.instance.collection("users");
 
@@ -133,6 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         title: _title(),
         backgroundColor: Colors.brown,

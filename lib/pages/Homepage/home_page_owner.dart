@@ -305,6 +305,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         title: _title(),
         actions: [_wifi(context)],
@@ -315,15 +316,15 @@ class _HomePageState extends State<HomePage> {
             child: Column(
           children: [
             _buttonCircle(),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             _dataSensor(),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             _cardForm(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Container(margin: EdgeInsets.all(25),child: !isEdit ? LongButton(text: "Selesai", onPressed: (){}) : LongButtonNonAktif(text: "Selesai", onPressed: (){},)),
             SizedBox(height: 20,),
           ],

@@ -60,6 +60,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),

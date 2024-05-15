@@ -4,7 +4,7 @@ import 'package:gencoff_app/pages/Homepage/history_page.dart';
 import 'package:gencoff_app/pages/Homepage/settings_page.dart';
 
 class BottomNavigasi extends StatefulWidget {
-  BottomNavigasi({super.key});
+  const BottomNavigasi({super.key});
 
   @override
   State<BottomNavigasi> createState() => _BottomNavigasiState();
@@ -37,7 +37,7 @@ class _BottomNavigasiState extends State<BottomNavigasi> {
         unselectedItemColor: Colors.brown[200], // Warna coklat muda untuk item yang tidak dipilih
         currentIndex: _selectedIndex,
         onTap: _navigateBottomBar,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,

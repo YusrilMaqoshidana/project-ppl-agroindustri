@@ -100,6 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
       ),
