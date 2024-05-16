@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/view_model/data_ukuran_view_mode.dart';
+import 'package:gencoff_app/view_model/data_sortir_view_mode.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/circle_button.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
@@ -177,11 +177,18 @@ class _HomePageState extends State<HomePage> {
         await DataSortirViewModel().addDataSensor(
             dataSensor, dataUkuranHijau, dataUkuranMerah, context);
         _showDialogSucces();
+        setState(() {
+          _initializeValues();
+        });
       } catch (e) {
         _showDialogFail("Data gagal ditambahkan");
       }
     }
   }
+
+  // Future<void> addRekapan() async {
+  //   await RekapanBulananViewModel().getDataBulanan();
+  // }
 
   void _showDialogSucces() {
     showDialog(
@@ -189,7 +196,9 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return SuccesAlertState(
           message: "Berhasil Masuk",
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         );
       },
     );
