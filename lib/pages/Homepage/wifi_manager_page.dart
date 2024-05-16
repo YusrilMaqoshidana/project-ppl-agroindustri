@@ -1,11 +1,25 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/widgets/input.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 
 class WifiManager extends StatelessWidget {
+  final databaseReference = FirebaseDatabase.instance.ref();
   WifiManager({super.key});
   final _ssidController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  void _inisialisasi() {
+    try {
+    databaseReference.child('wifi').set({
+      'ssid': _ssidController.text.trim(),
+      'password': _passwordController.text.trim()
+    });
+  } catch (e) {
+    print("Error: $e");
+  }
+  }
+
   Widget _title() {
     return const Text(
       "Wi-fi Manager",
@@ -30,13 +44,18 @@ class WifiManager extends StatelessWidget {
   }
 
   Widget buttonKirim() {
-    return Container(margin: const EdgeInsets.all(25),child: LongButton(text: "Kirim", onPressed: () {}));
+    return Container(
+        margin: const EdgeInsets.all(25),
+        child: LongButton(
+            text: "Kirim",
+            onPressed: () {
+              _inisialisasi();
+            }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         backgroundColor: Colors.brown,
       ),
