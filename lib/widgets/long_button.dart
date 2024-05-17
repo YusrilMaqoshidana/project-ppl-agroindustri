@@ -4,8 +4,7 @@ class LongButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const LongButton({Key? key, required this.text, required this.onPressed})
-      : super(key: key);
+  const LongButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class LongButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
               fontSize: 16,

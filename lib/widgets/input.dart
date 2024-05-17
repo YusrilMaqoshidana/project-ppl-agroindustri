@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class InputWithoutIcon extends StatelessWidget {
   final String text;
   final TextEditingController controller;
-  const InputWithoutIcon({Key? key, required this.text, required this.controller}) : super(key: key);
+  const InputWithoutIcon({super.key, required this.text, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class InputWithoutIcon extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: text,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }
@@ -22,9 +22,9 @@ class InputPassword extends StatefulWidget {
   final TextEditingController controller;
 
   const InputPassword({
-    Key? key,
+    super.key,
     required this.text,required this.controller
-  }) : super(key: key);
+  });
 
   @override
   State<InputPassword> createState() => _InputPasswordState();
@@ -40,7 +40,7 @@ class _InputPasswordState extends State<InputPassword> {
       obscureText: _isSecure,
       decoration: InputDecoration(
         labelText: widget.text,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         suffixIcon: IconButton(
           icon: Icon(_isSecure ? Icons.visibility_off : Icons.visibility),
           onPressed: () {

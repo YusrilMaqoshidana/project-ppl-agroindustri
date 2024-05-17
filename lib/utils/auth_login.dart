@@ -4,7 +4,7 @@ import 'package:gencoff_app/utils/bottom_navigasi.dart';
 import 'package:gencoff_app/pages/auth/login_page.dart';
 
 class AuthLogin extends StatelessWidget {
-  const AuthLogin({Key? key}) : super(key: key); // Perbaikan pada konstruktor
+  const AuthLogin({super.key}); // Perbaikan pada konstruktor
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,9 @@ class AuthLogin extends StatelessWidget {
             );
           } else if (snapshot.hasData && snapshot.data != null) {
             
-            return BottomNavigasi();
+            return const BottomNavigasi();
           } else {
-            return LoginPage();
+            return const LoginPage();
           }
         },
       ),

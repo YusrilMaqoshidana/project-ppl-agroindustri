@@ -44,19 +44,19 @@ class _BottomNavigasiState extends State<BottomNavigasi> {
             icon: Icon(
               Icons.home,
             ),
-            label: 'Home',
+            label: 'Beranda',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.history,
             ),
-            label: 'History',
+            label: 'Laporan',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.settings,
             ),
-            label: 'Settings',
+            label: 'Pengaturan',
           ),
         ],
       ),

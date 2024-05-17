@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:gencoff_app/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/pages/auth/login_page.dart';
 import 'package:gencoff_app/utils/auth_login.dart';
@@ -9,7 +8,7 @@ import 'package:gencoff_app/pages/auth/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
   runApp(const Gencoff());
 }
 
@@ -22,9 +21,9 @@ class Gencoff extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/login': (context) => const LoginPage(),
-        '/register': (context) => RegisterPage(),
+        '/register': (context) => const RegisterPage(),
         '/forgot_password': (context) => const ForgotPasswordPage(),
-        '/wifi_manager': (context)=> WifiManager(),
+        '/wifi_manager': (context)=> const WifiManager(),
         '/auth_login': (context) => const AuthLogin(),
       },
       home: const AuthLogin(),

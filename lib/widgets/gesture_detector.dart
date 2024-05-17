@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Gesture extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
-  const Gesture({Key? key, required this.text, required this.onTap}) : super(key: key);
+  const Gesture({super.key, required this.text, required this.onTap});
 
 
   @override
@@ -12,7 +12,7 @@ class Gesture extends StatelessWidget {
       onTap: onTap,
       child: Text(
         text,
-        style: TextStyle(fontFamily: 'Inter',fontSize: 16, color: Colors.blue),
+        style: const TextStyle(fontFamily: 'Inter',fontSize: 16, color: Colors.blue),
       ),
     );
   }
