@@ -75,13 +75,13 @@ Widget _textField(String subjudul) {
           margin: const EdgeInsets.only(top: 20, bottom: 10),
           child: Text(
             subjudul,
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
         ),
         TextField(
           controller: valueController,
-          style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-          decoration: InputDecoration(
+          style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+          decoration: const InputDecoration(
               hintText: "Masukan nama baru",
               hintStyle: TextStyle(color: Colors.grey)),
         ),
@@ -124,8 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
           _isEdit = !_isEdit;
         });
       } catch (error) {
-        print("Gagal memperbarui nama pengguna: $error");
-        // Tampilkan pesan kesalahan jika gagal memperbarui
+        Text(error.toString());
       }
     }
   }
@@ -133,7 +132,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         title: _title(),
         backgroundColor: Colors.brown,
@@ -218,7 +216,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               signOut();
                             }),
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             );
           } else if (snapshot.hasError) {
@@ -226,7 +224,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text("Error" + snapshot.error.toString()),
             );
           }
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         },

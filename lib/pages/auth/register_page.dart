@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/pages/auth/login_page.dart';
 import 'package:gencoff_app/view_model/firebase_provider.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 import 'package:gencoff_app/widgets/gesture_detector.dart';
@@ -7,7 +8,7 @@ import 'package:gencoff_app/widgets/input.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -79,7 +80,11 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context) {
         return SuccesAlertState(
           message: "Berhasil Daftar",
-          onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+          onPressed: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()), // Ganti HomePage dengan halaman yang sesuai
+            (Route<dynamic> route) => false,
+          ),
         );
       },
     );
@@ -100,7 +105,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
       ),
@@ -211,7 +215,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Gesture(
                       text: "Masuk",
                       onTap: () {
-                        Navigator.pushNamed(context, '/login');
+                        Navigator.of(context).pop(context);
                       },
                     ),
                   ),

@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/pages/auth/login_page.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 import 'package:gencoff_app/widgets/input.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+  const ForgotPasswordPage({super.key});
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -24,8 +25,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Future<void> _passwordReset() async {
     final email = _controllerEmail.text.trim();
     final userDoc = await FirebaseFirestore.instance
-        .collection('users') // Replace 'users' with your collection name
-        .where('email', isEqualTo: email) // Use email as document ID
+        .collection('users') 
+        .where('email', isEqualTo: email) 
         .get();
 
     if (userDoc.docs.isNotEmpty) {
@@ -52,7 +53,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return SuccesAlertState(message: message, onPressed: () => Navigator.pushNamed(context, '/main_page'));
+        return SuccesAlertState(message: message, onPressed: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()), // Ganti HomePage dengan halaman yang sesuai
+            (Route<dynamic> route) => false,
+          ));
       },
     );
   }
@@ -60,17 +65,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Lupa Password",
                 style: TextStyle(
                   fontFamily: "Inter",
@@ -83,20 +87,20 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 'assets/images/forgot_password.png',
                 width: 250,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Alamat email",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   InputWithoutIcon(
@@ -105,7 +109,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 200,
               ),
               LongButton(

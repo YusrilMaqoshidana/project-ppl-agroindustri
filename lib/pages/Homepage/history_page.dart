@@ -10,6 +10,8 @@ class HistoryPage extends StatefulWidget {
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
+class _HistoryPageState extends State<HistoryPage> {
+  String uid = Firebase().currentUser!.uid;
   Widget _title() {
     return const Text(
       "Laporan Hasil Sortir",
@@ -19,19 +21,15 @@ class HistoryPage extends StatefulWidget {
           fontWeight: FontWeight.w700),
     );
   }
-class _HistoryPageState extends State<HistoryPage> {
-
-  String uid = Firebase().currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(253, 253, 253, 100),
       appBar: AppBar(
         title: _title(),
         backgroundColor: Colors.brown,
       ),
-      body: StreamBuilder(
+      body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
             .doc(uid)
@@ -53,21 +51,42 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Text('Belum ada data sortir.'),
             );
           }
+
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var doc = snapshot.data!.docs[index];
-              var bulan = doc['waktu'].toDate().month;
+
+              // Get the month value from the 'bulan' field (assuming it's an integer)
+              int bulan = doc['waktu'].toDate().month;
+              int tahun = doc['waktu'].toDate().year;
               var namabulan = _getNamaBulan(bulan);
+
               return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(10.0), // Set corner radius
+                ),
+                margin:
+                    const EdgeInsets.all(16.0),
+                color: Colors.grey[100], // Add margin around the card
                 child: ListTile(
-                  title: Text('Sortiran Bulan $namabulan'),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Sortiran Bulan $namabulan', style: const TextStyle(fontWeight: FontWeight.w700),),
+                      Text("$tahun", style: const TextStyle(fontWeight: FontWeight.w400))
+                    ],
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              RincianPage(documentId: doc.id, bulan: namabulan,)),
+                        builder: (context) => RincianPage(
+                          documentId: doc.id,
+                          bulan: namabulan,
+                        ),
+                      ),
                     );
                   },
                 ),

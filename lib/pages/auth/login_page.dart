@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/utils/auth_login.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 import 'package:gencoff_app/widgets/gesture_detector.dart';
@@ -51,7 +52,8 @@ class _LoginPageState extends State<LoginPage> {
                 "Terdapat kesalahan dalam jaringan, coba lagi nanti");
             break;
           case 'invalid-credential':
-            _showDialogFail("Alamat email dan kata sandi yang anda masukan salah");
+            _showDialogFail(
+                "Alamat email dan kata sandi yang anda masukan salah");
             break;
           default:
             _showDialogFail('${e.code}: ${e.message}');
@@ -73,7 +75,13 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) {
         return SuccesAlertState(
           message: "Berhasil Masuk",
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    const AuthLogin()), // Ganti HomePage dengan halaman yang sesuai
+            (Route<dynamic> route) => false,
+          ),
         );
       },
     );
@@ -94,7 +102,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(253, 253, 253, 100),
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 80),
