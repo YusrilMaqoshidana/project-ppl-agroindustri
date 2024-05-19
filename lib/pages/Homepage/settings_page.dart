@@ -221,7 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text("Error" + snapshot.error.toString()),
+              child: Text("Error ${snapshot.error}"),
             );
           }
           return const Center(

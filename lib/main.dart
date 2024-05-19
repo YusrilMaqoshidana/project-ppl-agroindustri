@@ -5,6 +5,7 @@ import 'package:gencoff_app/utils/auth_login.dart';
 import 'package:gencoff_app/pages/Homepage/wifi_manager_page.dart';
 import 'package:gencoff_app/pages/auth/forgot_password_page.dart';
 import 'package:gencoff_app/pages/auth/register_page.dart';
+import 'package:gencoff_app/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class Gencoff extends StatelessWidget {
         '/wifi_manager': (context)=> const WifiManager(),
         '/auth_login': (context) => const AuthLogin(),
       },
-      home: const AuthLogin(),
+      home: const SplashScreenPage(),
     );
   }
 }

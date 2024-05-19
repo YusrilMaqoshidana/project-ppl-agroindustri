@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/view_model/data_sortir_view_mode.dart';
+import 'package:gencoff_app/view_model/realtime_provider.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/circle_button.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final RealtimeDatabase _sensorViewModel = RealtimeDatabase();
   final TextEditingController _hijauKecilController = TextEditingController();
   final TextEditingController _hijauSedangController = TextEditingController();
   final TextEditingController _hijauBesarController = TextEditingController();
@@ -37,11 +39,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _initializeValues();
     _readWiFiStatus();
+    fetchData();
   }
 
   void _initializeValues() {
     // Isi nilai awal ke dalam variabel-variabel
-
+    dataSensor = {'hijau': 0, 'merah': 0};
     _hijauKecilController.text = '0';
     _hijauSedangController.text = '0';
     _hijauBesarController.text = '0';
@@ -90,6 +93,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             )));
   }
+
   Widget _dataSensor() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -275,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Data hasil sortir",
+                    "Data Ukuran",
                     style: TextStyle(
                       fontFamily: "Inter",
                       fontWeight: FontWeight.w700,
@@ -474,6 +478,19 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> fetchData() async {
+    try {
+      final Map<String, dynamic> responseData =
+          await _sensorViewModel.getDataSensor();
+      setState(() {
+        dataSensor['hijau'] = responseData['hijau'] ?? 0;
+        dataSensor['merah'] = responseData['merah'] ?? 0;
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -487,7 +504,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
           children: [
             _statusKoneksi(context),
-            CircleButton(),
+            const CircleButton(),
             const SizedBox(
               height: 25,
             ),

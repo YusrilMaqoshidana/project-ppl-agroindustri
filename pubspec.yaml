@@ -38,7 +38,8 @@ dependencies:
   firebase_auth: ^4.17.8
   cloud_firestore: ^4.15.8
   firebase_database: ^10.1.0
-  flutter_native_splash: ^2.4.0
+  http: ^1.2.1
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:
@@ -89,15 +90,5 @@ flutter:
           weight: 500
         - asset: assets/fonts/Inter-Regular.ttf
           weight: 400
-
-flutter_native_splash:
-  color: "#FDFDFD"
-  image: assets/images/logo.png
-
-  android_12:
-    image: assets/images/logo.png
-    color: "#FDFDFD"
-  ios: false
-  web: false
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
