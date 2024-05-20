@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/view_model/data_sortir_view_mode.dart';
-import 'package:gencoff_app/view_model/realtime_provider.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/circle_button.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
@@ -15,7 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final RealtimeDatabase _sensorViewModel = RealtimeDatabase();
   final TextEditingController _hijauKecilController = TextEditingController();
   final TextEditingController _hijauSedangController = TextEditingController();
   final TextEditingController _hijauBesarController = TextEditingController();
@@ -95,64 +93,82 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _dataSensor() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  return StreamBuilder<DatabaseEvent>(
+    stream: getSensorStream(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
+        return const Center(child: Text('No real-time data available'));
+      } else {
+        final realTimeData = Map<String, dynamic>.from(snapshot.data!.snapshot.value as Map);
+        dataSensor['hijau'] = realTimeData['hijau'] as int;
+        dataSensor['merah'] = realTimeData['merah'] as int;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Text(
-              "Biji Hijau",
-              style: TextStyle(
-                fontFamily: "Inter",
-                fontWeight: FontWeight.w700,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Biji Hijau",
+                  style: TextStyle(
+                    fontFamily: "Inter",
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  height: 65,
+                  width: 150,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Colors.brown,
+                  ),
+                  child: Center(
+                      child: Text(
+                    "${dataSensor['hijau']}",
+                    style: const TextStyle(color: Colors.white),
+                  )),
+                )
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              height: 65,
-              width: 150,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.brown,
-              ),
-              child: Center(
-                  child: Text(
-                "${dataSensor['hijau']}",
-                style: const TextStyle(color: Colors.white),
-              )),
-            )
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Biji Merah",
-              style: TextStyle(
-                fontFamily: "Inter",
-                fontWeight: FontWeight.w700,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Biji Merah",
+                  style: TextStyle(
+                    fontFamily: "Inter",
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  height: 65,
+                  width: 150,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Colors.brown,
+                  ),
+                  child: Center(
+                      child: Text(
+                    "${dataSensor['merah']}",
+                    style: const TextStyle(color: Colors.white),
+                  )),
+                )
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              height: 65,
-              width: 150,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.brown,
-              ),
-              child: Center(
-                  child: Text(
-                "${dataSensor['merah']}",
-                style: const TextStyle(color: Colors.white),
-              )),
-            )
           ],
-        ),
-      ],
-    );
-  }
+        );
+      }
+    },
+  );
+}
+
 
   Widget _readData(int controller) {
     return Container(
@@ -478,13 +494,18 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+Stream<DatabaseEvent> getSensorStream() {
+  return _databaseReference.child('sensors').onValue;
+}
+
   Future<void> fetchData() async {
     try {
-      final Map<String, dynamic> responseData =
-          await _sensorViewModel.getDataSensor();
+      final DataSnapshot data = await _databaseReference.child('sensors').get();
+      final Map<String, dynamic> read = data.value as Map<String, dynamic>;
+
       setState(() {
-        dataSensor['hijau'] = responseData['hijau'] ?? 0;
-        dataSensor['merah'] = responseData['merah'] ?? 0;
+        dataSensor['hijau'] = read['hijau'] as int;
+        dataSensor['merah'] = read['merah'] as int;
       });
     } catch (e) {
       print('Error: $e');
