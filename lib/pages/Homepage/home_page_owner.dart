@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/models/sensor_sata.dart';
 import 'package:gencoff_app/view_model/data_sortir_view_mode.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/circle_button.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,13 +31,11 @@ class _HomePageState extends State<HomePage> {
   bool isEdit = false;
   bool keadaanWifi = false;
   bool keadaanTombol = false;
-  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
 
   @override
   void initState() {
     super.initState();
     _initializeValues();
-    fetchData();
   }
 
   void _initializeValues() {
@@ -79,82 +78,75 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _dataSensor() {
-  return StreamBuilder<DatabaseEvent>(
-    stream: getSensorStream(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      } else if (snapshot.hasError) {
-        return Center(child: Text('Error: ${snapshot.error}'));
-      } else if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
-        return const Center(child: Text('No real-time data available'));
-      } else {
-        final realTimeData = Map<String, dynamic>.from(snapshot.data!.snapshot.value as Map);
-        dataSensor['hijau'] = realTimeData['hijau'] as int;
-        dataSensor['merah'] = realTimeData['merah'] as int;
-
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Biji Hijau",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  height: 65,
-                  width: 150,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.brown,
-                  ),
-                  child: Center(
-                      child: Text(
-                    "${dataSensor['hijau']}",
-                    style: const TextStyle(color: Colors.white),
-                  )),
-                )
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Biji Merah",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  height: 65,
-                  width: 150,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.brown,
-                  ),
-                  child: Center(
-                      child: Text(
-                    "${dataSensor['merah']}",
-                    style: const TextStyle(color: Colors.white),
-                  )),
-                )
-              ],
-            ),
-          ],
-        );
+    return Consumer<SensorData>(builder: (context, sensorData, child) {
+      if (sensorData.data.isEmpty) {
+        return const Center(child: Text('No Data'));
       }
-    },
-  );
-}
 
+      final dataSensor = {
+        'hijau': sensorData.data['hijau'] ?? 0,
+        'merah': sensorData.data['merah'] ?? 0,
+      };
+
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Biji Hijau",
+                style: TextStyle(
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                height: 65,
+                width: 150,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Colors.brown,
+                ),
+                child: Center(
+                    child: Text(
+                  "${dataSensor['hijau']}",
+                  style: const TextStyle(color: Colors.white),
+                )),
+              )
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Biji Merah",
+                style: TextStyle(
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                height: 65,
+                width: 150,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Colors.brown,
+                ),
+                child: Center(
+                    child: Text(
+                  "${dataSensor['merah']}",
+                  style: const TextStyle(color: Colors.white),
+                )),
+              )
+            ],
+          ),
+        ],
+      );
+    });
+  }
 
   Widget _readData(int controller) {
     return Container(
@@ -408,23 +400,19 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-Stream<DatabaseEvent> getSensorStream() {
-  return _databaseReference.child('sensors').onValue;
-}
+  // Future<void> fetchData() async {
+  //   try {
+  //     final DataSnapshot data = await _databaseReference.child('sensors').get();
+  //     final Map<String, dynamic> read = data.value as Map<String, dynamic>;
 
-  Future<void> fetchData() async {
-    try {
-      final DataSnapshot data = await _databaseReference.child('sensors').get();
-      final Map<String, dynamic> read = data.value as Map<String, dynamic>;
-
-      setState(() {
-        dataSensor['hijau'] = read['hijau'] as int;
-        dataSensor['merah'] = read['merah'] as int;
-      });
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+  //     setState(() {
+  //       dataSensor['hijau'] = read['hijau'] as int;
+  //       dataSensor['merah'] = read['merah'] as int;
+  //     });
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

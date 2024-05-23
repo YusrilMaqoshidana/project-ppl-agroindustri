@@ -8,16 +8,16 @@ class SortingData {
   final int bulan;
   final int tahun;
 
-  SortingData({
-    required this.dataSensor,
-    required this.merah,
-    required this.hijau,
-    required this.totalDataSensor,
-    required this.totalDataUkuran,
-    required this.totalDataSortir,
-    required this.bulan,
-    required this.tahun,
-  });
+  SortingData(
+    this.dataSensor,
+    this.merah,
+    this.hijau,
+    this.totalDataSensor,
+    this.totalDataUkuran,
+    this.totalDataSortir,
+    this.bulan,
+    this.tahun,
+  );
 
   Map<String, dynamic> toMap() {
     return {

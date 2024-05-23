@@ -34,14 +34,14 @@ class DataSortirViewModel {
           .get();
 
       SortingData sortingData = SortingData(
-        dataSensor: dataSensor,
-        merah: merah,
-        hijau: hijau,
-        totalDataSensor: totalDataSensor,
-        totalDataUkuran: totalDataUkuran,
-        totalDataSortir: totalDataSortir,
-        bulan: currentMonth,
-        tahun: currentYear,
+        dataSensor,
+        merah,
+        hijau,
+        totalDataSensor,
+        totalDataUkuran,
+        totalDataSortir,
+        currentMonth,
+        currentYear,
       );
       if (snapshot.docs.isNotEmpty) {
         // Jika ada, update data yang ada dengan data baru

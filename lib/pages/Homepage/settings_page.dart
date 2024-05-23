@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gencoff_app/utils/auth_login.dart';
 import 'package:gencoff_app/view_model/login_view_model.dart';
 import 'package:gencoff_app/view_model/profile_view_model.dart';
 import 'package:gencoff_app/widgets/alert.dart';
@@ -221,9 +222,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             );
           } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error ${snapshot.error}"),
-            );
+            return const AuthLogin();
           }
           return const Center(
             child: CircularProgressIndicator(),
