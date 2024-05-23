@@ -82,12 +82,10 @@ class _HomePageState extends State<HomePage> {
       if (sensorData.data.isEmpty) {
         return const Center(child: Text('No Data'));
       }
-
-      final dataSensor = {
+      dataSensor = {
         'hijau': sensorData.data['hijau'] ?? 0,
         'merah': sensorData.data['merah'] ?? 0,
       };
-
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
