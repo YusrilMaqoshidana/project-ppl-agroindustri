@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/pages/auth/login_page.dart';
-import 'package:gencoff_app/view_model/firebase_provider.dart';
+import 'package:gencoff_app/view_model/register_view_model.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 import 'package:gencoff_app/widgets/gesture_detector.dart';
 import 'package:gencoff_app/widgets/input.dart';
@@ -32,17 +32,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _signUp() async {
     if (_passwordController.text.trim() ==
-            _passwordConfirmController.text.trim()) {
+        _passwordConfirmController.text.trim()) {
       try {
-        await Firebase().createUserWithEmailAndPassword(
+        await RegisterViewModel().createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
-        Firebase().addUserDetails(
+        RegisterViewModel().addUserDetails(
             username: _userController.text.trim(),
             email: _emailController.text.trim());
         _showDialogSucces();
       } on FirebaseAuthException catch (e) {
-        switch ('${e.code}') {
+        switch (e.code) {
           case 'invalid-email':
             _showDialogFail("Pastikan format alamat email anda benar");
             break;
@@ -82,7 +82,9 @@ class _RegisterPageState extends State<RegisterPage> {
           message: "Berhasil Daftar",
           onPressed: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const LoginPage()), // Ganti HomePage dengan halaman yang sesuai
+            MaterialPageRoute(
+                builder: (context) =>
+                    const LoginPage()), // Ganti HomePage dengan halaman yang sesuai
             (Route<dynamic> route) => false,
           ),
         );
@@ -107,6 +109,16 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+        title: const Text(
+          "Daftar",
+          style: TextStyle(
+            fontFamily: "Inter",
+            fontWeight: FontWeight.w700,
+            fontSize: 26,
+            letterSpacing: 3,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -114,15 +126,6 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "Daftar",
-                style: TextStyle(
-                  fontFamily: "Inter",
-                  fontWeight: FontWeight.w700,
-                  fontSize: 28,
-                  letterSpacing: 3,
-                ),
-              ),
               const SizedBox(
                 height: 40,
               ),

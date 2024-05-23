@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gencoff_app/view_model/firebase_provider.dart';
+import 'package:gencoff_app/view_model/login_view_model.dart';
 import 'package:gencoff_app/widgets/card_history.dart';
 
 class RincianPage extends StatefulWidget {
@@ -21,7 +21,7 @@ Widget _title() {
 }
 
 class _RincianPageState extends State<RincianPage> {
-  String uid = Firebase().currentUser!.uid;
+  String uid = LoginViewModel().currentUser!.uid;
   int persentaseMerah = 0;
   int persentaseHijau = 0;
   @override

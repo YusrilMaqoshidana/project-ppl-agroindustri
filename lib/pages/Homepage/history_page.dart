@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gencoff_app/pages/Homepage/rincian_rekapan.dart';
-import 'package:gencoff_app/view_model/firebase_provider.dart';
+import 'package:gencoff_app/view_model/login_view_model.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -11,7 +11,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  String uid = Firebase().currentUser!.uid;
+  String uid = LoginViewModel().currentUser!.uid;
   Widget _title() {
     return const Text(
       "Laporan Hasil Sortir",

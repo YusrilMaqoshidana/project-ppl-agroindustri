@@ -5,17 +5,6 @@ import 'package:http/http.dart' as http;
 
 class RealtimeDatabase {
   final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
-
-  void addSsidAndPassword(String ssid, String password) {
-    try {
-      _databaseReference
-          .child('wifi')
-          .set({'ssid': ssid, 'password': password});
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
   void statusTombol(bool status) {
     try {
       _databaseReference.child('tombol').set(status);
@@ -26,7 +15,7 @@ class RealtimeDatabase {
   }
 
   Future<Map<String, dynamic>> getDataSensor() async {
-    final url = 'https://gencoff-app-default-rtdb.firebaseio.com/sensors.json';
+    const url = 'https://gencoff-app-default-rtdb.firebaseio.com/sensors.json';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);

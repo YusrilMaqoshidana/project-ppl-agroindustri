@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initializeValues();
-    _readWiFiStatus();
     fetchData();
   }
 
@@ -77,19 +76,6 @@ class _HomePageState extends State<HomePage> {
           fontFamily: "Inter",
           fontWeight: FontWeight.w700),
     );
-  }
-
-  Widget _wifi(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.only(right: 25),
-        child: IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/wifi_manager');
-            },
-            icon: const Icon(
-              Icons.wifi,
-              color: Colors.white,
-            )));
   }
 
   Widget _dataSensor() {
@@ -422,78 +408,6 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  Widget _statusKoneksi(context) {
-    List<Widget> icon = [
-      const Icon(
-        Icons.wifi_lock,
-        color: Colors.white,
-      ),
-      const Icon(
-        Icons.wifi,
-        color: Colors.white,
-      )
-    ];
-    List<Widget> status = [
-      const Text("Status : Belom Terkoneksi",
-          style: TextStyle(
-              fontSize: 14,
-              fontFamily: "Inter",
-              fontWeight: FontWeight.w700,
-              color: Colors.white)),
-      const Text("Status : Terkoneksi",
-          style: TextStyle(
-              fontSize: 14,
-              fontFamily: "Inter",
-              fontWeight: FontWeight.w700,
-              color: Colors.white)),
-    ];
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 80,
-      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 50),
-      decoration: BoxDecoration(
-        color: Colors.brown,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          !keadaanWifi ? icon[0] : icon[1],
-          const SizedBox(
-            width: 20,
-          ),
-          !keadaanWifi ? status[0] : status[1]
-        ],
-      ),
-    );
-  }
-
-  Future<void> _readWiFiStatus() async {
-    try {
-      final DataSnapshot snapshot =
-          await _databaseReference.child('wifiStatus').get();
-      final data = snapshot.value;
-      if (data is bool) {
-        // Pindahkan setState() ke luar blok if
-        setState(() {
-          if (data == true) {
-            keadaanWifi = true;
-          } else {
-            keadaanWifi = false;
-          }
-        });
-      } else {
-        setState(() {
-          keadaanWifi = false;
-        });
-      }
-    } catch (error) {
-      setState(() {
-        keadaanWifi = false;
-      });
-    }
-  }
-
 Stream<DatabaseEvent> getSensorStream() {
   return _databaseReference.child('sensors').onValue;
 }
@@ -517,14 +431,12 @@ Stream<DatabaseEvent> getSensorStream() {
     return Scaffold(
       appBar: AppBar(
         title: _title(),
-        actions: [_wifi(context)],
         backgroundColor: Colors.brown,
       ),
       body: SingleChildScrollView(
         child: Center(
             child: Column(
           children: [
-            _statusKoneksi(context),
             const CircleButton(),
             const SizedBox(
               height: 25,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/pages/auth/login_page.dart';
+import 'package:gencoff_app/view_model/forgot_password_view_model.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 import 'package:gencoff_app/widgets/input.dart';
@@ -25,19 +26,46 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Future<void> _passwordReset() async {
     final email = _controllerEmail.text.trim();
     final userDoc = await FirebaseFirestore.instance
-        .collection('users') 
-        .where('email', isEqualTo: email) 
+        .collection('users')
+        .where('email', isEqualTo: email)
         .get();
-
     if (userDoc.docs.isNotEmpty) {
-        await FirebaseAuth.instance
-            .sendPasswordResetEmail(email: _controllerEmail.text.trim());
-        _showDialogSuccess('Link reset kata sandi berhasil terkirim, cek alamat email anda!');
+      try {
+        await ForgotPasswordViewModel()
+          .forgotPassword(email: email);
+      _showDialogSuccess(
+          'Link reset kata sandi berhasil terkirim, cek alamat email anda!');
+      } on FirebaseAuthException catch (e) {
+        switch ('${e.code}') {
+          case 'user-disabled':
+            _showDialogFail("Akun anda dinonaktifkan oleh administrator");
+            break;
+          case 'channel-error':
+            _showDialogFail("Data tidak boleh kosong!");
+            break;
+          case 'user-not-found':
+            _showDialogFail(
+                "Email yang anda masukkan tidak terdaftar sebagai pengguna");
+            break;
+          case 'too-many-requests':
+            _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
+            break;
+          case 'network-request-failed':
+            _showDialogFail(
+                "Terdapat kesalahan dalam jaringan, coba lagi nanti");
+            break;
+          case 'invalid-credential':
+            _showDialogFail(
+                "Alamat email yang anda masukan salah");
+            break;
+          default:
+            _showDialogFail('${e.code}: ${e.message}');
+        }
+      }
     } else {
       _showDialogFail('Pastikan alamat email anda valid');
     }
   }
-
 
   void _showDialogFail(String message) {
     showDialog(
@@ -53,11 +81,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return SuccesAlertState(message: message, onPressed: () => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()), // Ganti HomePage dengan halaman yang sesuai
-            (Route<dynamic> route) => false,
-          ));
+        return SuccesAlertState(
+            message: message,
+            onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const LoginPage()), // Ganti HomePage dengan halaman yang sesuai
+                  (Route<dynamic> route) => false,
+                ));
       },
     );
   }
@@ -67,6 +99,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        title: const Text(
+                "Lupa Password",
+                style: TextStyle(
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                ),
+              ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -74,15 +115,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                "Lupa Password",
-                style: TextStyle(
-                  fontFamily: "Inter",
-                  fontWeight: FontWeight.w700,
-                  fontSize: 28,
-                  letterSpacing: 3,
-                ),
-              ),
+              
               Image.asset(
                 'assets/images/forgot_password.png',
                 width: 250,
@@ -110,7 +143,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ],
               ),
               const SizedBox(
-                height: 200,
+                height: 240,
               ),
               LongButton(
                 text: "Konfirmasi",

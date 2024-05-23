@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gencoff_app/view_model/firebase_provider.dart';
+import 'package:gencoff_app/view_model/login_view_model.dart';
+import 'package:gencoff_app/view_model/profile_view_model.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
 
@@ -91,14 +92,14 @@ Widget _textField(String subjudul) {
 }
 
 Future<void> signOut() async {
-  await Firebase().signOut();
+  await ProfileViewModel().signOut();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    currentUser = Firebase().currentUser;
+    currentUser = LoginViewModel().currentUser;
   }
 
   Future<void> _updateUsername() async {
@@ -112,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
     } else {
       try {
         // Perbarui nama pengguna di Firebase Auth
-        await Firebase().updateUsername(valueController.text.trim());
+        await ProfileViewModel().updateUsername(valueController.text.trim());
 
         // Perbarui nama pengguna di Firestore
         await users
