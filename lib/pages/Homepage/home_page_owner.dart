@@ -398,20 +398,6 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  // Future<void> fetchData() async {
-  //   try {
-  //     final DataSnapshot data = await _databaseReference.child('sensors').get();
-  //     final Map<String, dynamic> read = data.value as Map<String, dynamic>;
-
-  //     setState(() {
-  //       dataSensor['hijau'] = read['hijau'] as int;
-  //       dataSensor['merah'] = read['merah'] as int;
-  //     });
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -441,8 +427,13 @@ class _HomePageState extends State<HomePage> {
                   ? LongButton(
                       text: "Selesai",
                       onPressed: () {
-                        _validateAlert(
-                            "Apakah anda yakin ingin menambah data?");
+                        if (CircleButton.kondisi) {
+                          _showDialogFail(
+                              "Pastikan alat IoT dalam kondisi mati");
+                        } else {
+                          _validateAlert(
+                              "Apakah anda yakin ingin menambah data?");
+                        }
                       },
                     )
                   : LongButtonNonAktif(
