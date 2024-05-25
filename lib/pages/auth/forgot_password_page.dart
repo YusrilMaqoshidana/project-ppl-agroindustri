@@ -34,7 +34,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         await ForgotPasswordViewModel()
           .forgotPassword(email: email);
       _showDialogSuccess(
-          'Link reset kata sandi berhasil terkirim, cek alamat email anda!');
+          'Link berhasil terkirim, cek alamat email anda!');
       } on FirebaseAuthException catch (e) {
         switch ('${e.code}') {
           case 'user-disabled':
@@ -45,7 +45,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             break;
           case 'user-not-found':
             _showDialogFail(
-                "Email yang anda masukkan tidak terdaftar sebagai pengguna");
+                "Email anda tidak terdaftar sebagai pengguna");
             break;
           case 'too-many-requests':
             _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
@@ -100,7 +100,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-                "Lupa Password",
+                "Lupa Kata Sandi",
                 style: TextStyle(
                   fontFamily: "Inter",
                   fontWeight: FontWeight.w700,

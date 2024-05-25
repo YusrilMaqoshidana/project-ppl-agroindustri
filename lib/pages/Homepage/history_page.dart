@@ -14,7 +14,7 @@ class _HistoryPageState extends State<HistoryPage> {
   String uid = LoginViewModel().currentUser!.uid;
   Widget _title() {
     return const Text(
-      "Laporan Hasil Sortir",
+      "Rekapitulasi Hasil Sortir",
       style: TextStyle(
           color: Colors.white,
           fontFamily: "Inter",

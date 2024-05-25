@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gencoff_app/models/sensor_sata.dart';
 import 'package:gencoff_app/view_model/data_sortir_view_mode.dart';
+import 'package:gencoff_app/view_model/realtime_provider.dart';
 import 'package:gencoff_app/widgets/alert.dart';
 import 'package:gencoff_app/widgets/circle_button.dart';
 import 'package:gencoff_app/widgets/long_button.dart';
@@ -203,6 +204,7 @@ class _HomePageState extends State<HomePage> {
             totalDataSortir,
             context);
         _showDialogSucces();
+        RealtimeDatabase().resetDataSensor();
         setState(() {
           _initializeValues();
         });

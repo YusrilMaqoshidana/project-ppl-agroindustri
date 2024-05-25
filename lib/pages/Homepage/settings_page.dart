@@ -103,31 +103,28 @@ class _SettingsPageState extends State<SettingsPage> {
     currentUser = LoginViewModel().currentUser;
   }
 
+  void _showDialogFail(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return FailAlertState(
+          message: message,
+          onPressed: () => Navigator.pop(context),
+        );
+      },
+    );
+  }
+
   Future<void> _updateUsername() async {
     if (valueController.text.isEmpty) {
-      FailAlertState(
-        message: "Pastikan input nama tidak kosong",
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
+      _showDialogFail("Pastikan nama tidak kosong");
     } else {
-      try {
-        // Perbarui nama pengguna di Firebase Auth
-        await ProfileViewModel().updateUsername(valueController.text.trim());
-
-        // Perbarui nama pengguna di Firestore
-        await users
-            .doc(currentUser?.uid)
-            .update({'username': valueController.text});
-
-        // Setelah data diperbarui, kembali ke tampilan non-edit
-        setState(() {
-          _isEdit = !_isEdit;
-        });
-      } catch (error) {
-        Text(error.toString());
-      }
+      // Perbarui nama pengguna di Firestore
+      await ProfileViewModel().updateUsername(valueController.text.trim());
+      // Setelah data diperbarui, kembali ke tampilan non-edit
+      setState(() {
+        _isEdit = !_isEdit;
+      });
     }
   }
 
@@ -153,7 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const Center(
                   child: Text(
-                    "Profile",
+                    "Profil",
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 28,

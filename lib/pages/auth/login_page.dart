@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Gesture(
-                      text: "Lupa password?",
+                      text: "Lupa kata sandi?",
                       onTap: () {
                         Navigator.pushNamed(context, '/forgot_password');
                       },
