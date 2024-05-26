@@ -129,6 +129,21 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  void _validateAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ValidationState(
+          message: message,
+          onPressed: () {
+            Navigator.of(context).pop(context);
+            _updateUsername();
+          },
+        );
+      },
+    );
+  }
+
   Future<void> _updateUsername() async {
     if (valueController.text.isEmpty) {
       _showDialogFail("Pastikan nama tidak kosong");
@@ -210,7 +225,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: LongButton(
                                 text: "Simpan",
                                 onPressed: () {
-                                  _updateUsername();
+                                  _validateAlert("Simpan perubahan?");
                                 }),
                           )
                         ],
