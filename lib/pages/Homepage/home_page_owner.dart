@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return SuccesAlertState(
-          message: "Berhasil Masuk",
+          message: "Data berhasil disimpan",
           onPressed: () {
             Navigator.pop(context);
           },

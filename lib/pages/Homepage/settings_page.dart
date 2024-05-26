@@ -103,6 +103,20 @@ class _SettingsPageState extends State<SettingsPage> {
     currentUser = LoginViewModel().currentUser;
   }
 
+  void _showDialogSucces() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SuccesAlertState(
+          message: "Nama berhasil dirubah",
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
   void _showDialogFail(String message) {
     showDialog(
       context: context,
@@ -122,6 +136,7 @@ class _SettingsPageState extends State<SettingsPage> {
       // Perbarui nama pengguna di Firestore
       await ProfileViewModel().updateUsername(valueController.text.trim());
       // Setelah data diperbarui, kembali ke tampilan non-edit
+      _showDialogSucces();
       setState(() {
         _isEdit = !_isEdit;
       });
