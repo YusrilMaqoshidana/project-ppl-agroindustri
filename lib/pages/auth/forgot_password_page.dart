@@ -54,10 +54,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             _showDialogFail(
                 "Terdapat kesalahan dalam jaringan, coba lagi nanti");
             break;
-          case 'invalid-credential':
-            _showDialogFail(
-                "Alamat email yang anda masukan salah");
-            break;
           default:
             _showDialogFail('${e.code}: ${e.message}');
         }

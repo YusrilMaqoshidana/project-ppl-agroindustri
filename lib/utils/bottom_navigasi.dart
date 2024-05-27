@@ -50,7 +50,7 @@ class _BottomNavigasiState extends State<BottomNavigasi> {
             icon: Icon(
               Icons.history,
             ),
-            label: 'Laporan',
+            label: 'Rekap',
           ),
           BottomNavigationBarItem(
             icon: Icon(

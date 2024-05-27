@@ -108,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (context) {
         return SuccesAlertState(
-          message: "Nama berhasil dirubah",
+          message: "Nama berhasil diubah",
           onPressed: () {
             Navigator.pop(context);
           },
@@ -223,7 +223,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             margin: const EdgeInsets.only(top: 20),
                             width: 150,
                             child: LongButton(
-                                text: "Simpan",
+                                text: "Perbarui",
                                 onPressed: () {
                                   _validateAlert("Simpan perubahan?");
                                 }),

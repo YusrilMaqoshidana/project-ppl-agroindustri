@@ -32,7 +32,6 @@ class DataSortirViewModel {
           .where('bulan', isEqualTo: currentMonth)
           .where('tahun', isEqualTo: currentYear)
           .get();
-
       SortingData sortingData = SortingData(
         dataSensor,
         merah,
@@ -97,7 +96,6 @@ class DataSortirViewModel {
           'waktu': FieldValue.serverTimestamp(),
         });
       }
-
       SuccesAlertState(
         message: "Data berhasil ditambahkan",
         onPressed: () {

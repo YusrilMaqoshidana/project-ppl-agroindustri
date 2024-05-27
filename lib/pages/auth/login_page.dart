@@ -40,10 +40,6 @@ class _LoginPageState extends State<LoginPage> {
           case 'channel-error':
             _showDialogFail("Data tidak boleh kosong!");
             break;
-          case 'user-not-found':
-            _showDialogFail(
-                "Email yang anda masukkan tidak terdaftar sebagai pengguna");
-            break;
           case 'too-many-requests':
             _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
             break;
