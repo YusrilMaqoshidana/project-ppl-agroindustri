@@ -50,7 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
             _showDialogFail("Data tidak boleh kosong!");
             break;
           case 'email-already-in-use':
-            _showDialogFail("Alamat email yang anda masukan sudah terdaftar");
+            _showDialogFail("Alamat email sudah terdaftar");
             break;
           case 'too-many-requests':
             _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
@@ -79,7 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
       builder: (context) {
         return SuccesAlertState(
-          message: "Berhasil Daftar",
+          message: "Selamat anda berhasil daftar",
           onPressed: () => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
