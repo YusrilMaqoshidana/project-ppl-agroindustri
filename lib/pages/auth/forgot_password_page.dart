@@ -37,18 +37,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           'Link berhasil terkirim, cek alamat email anda!');
       } on FirebaseAuthException catch (e) {
         switch ('${e.code}') {
-          case 'user-disabled':
-            _showDialogFail("Akun anda dinonaktifkan oleh administrator");
-            break;
           case 'channel-error':
             _showDialogFail("Data tidak boleh kosong!");
             break;
           case 'user-not-found':
             _showDialogFail(
                 "Email anda tidak terdaftar sebagai pengguna");
-            break;
-          case 'too-many-requests':
-            _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
             break;
           case 'network-request-failed':
             _showDialogFail(
@@ -59,7 +53,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         }
       }
     } else {
-      _showDialogFail('Pastikan alamat email anda valid');
+      _showDialogFail('Alamat email yang anda masukan salah');
     }
   }
 

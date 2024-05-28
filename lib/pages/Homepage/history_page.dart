@@ -56,12 +56,10 @@ class _HistoryPageState extends State<HistoryPage> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var doc = snapshot.data!.docs[index];
-
               // Get the month value from the 'bulan' field (assuming it's an integer)
               int bulan = doc['waktu'].toDate().month;
               int tahun = doc['waktu'].toDate().year;
               var namabulan = _getNamaBulan(bulan);
-
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius:

@@ -43,21 +43,18 @@ class _RegisterPageState extends State<RegisterPage> {
         _showDialogSucces();
       } on FirebaseAuthException catch (e) {
         switch (e.code) {
-          case 'invalid-email':
-            _showDialogFail("Pastikan format alamat email anda benar");
+          case 'network-request-failed':
+            _showDialogFail(
+                "Terdapat kesalahan dalam jaringan, coba lagi nanti");
             break;
           case 'channel-error':
             _showDialogFail("Data tidak boleh kosong!");
             break;
+          case 'invalid-email':
+            _showDialogFail("Pastikan format alamat email anda benar");
+            break;
           case 'email-already-in-use':
             _showDialogFail("Alamat email sudah terdaftar");
-            break;
-          case 'too-many-requests':
-            _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
-            break;
-          case 'network-request-failed':
-            _showDialogFail(
-                "Terdapat kesalahan dalam jaringan, coba lagi nanti");
             break;
           default:
             _showDialogFail('${e.code}: ${e.message}');

@@ -26,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _signInWithEmailAndPassword() async {
-    if (_isValidEmail(_controllerEmail.text.trim())) {
       try {
         await LoginViewModel().signInWithEmailAndPassword(
             email: _controllerEmail.text.trim(),
@@ -34,36 +33,27 @@ class _LoginPageState extends State<LoginPage> {
         _showDialogSucces();
       } on FirebaseAuthException catch (e) {
         switch ('${e.code}') {
-          case 'user-disabled':
-            _showDialogFail("Akun anda dinonaktifkan oleh administrator");
-            break;
-          case 'channel-error':
-            _showDialogFail("Data tidak boleh kosong!");
-            break;
-          case 'too-many-requests':
-            _showDialogFail("Terlalu banyak permintaan, coba lagi nanti");
-            break;
           case 'network-request-failed':
             _showDialogFail(
                 "Terdapat kesalahan dalam jaringan, coba lagi nanti");
             break;
+          case 'channel-error':
+            _showDialogFail("Data tidak boleh kosong!");
+            break;
+          case 'invalid-email':
+            _showDialogFail(
+                "Alamat email atau kata sandi yang anda masukan salah");
+            break;
           case 'invalid-credential':
             _showDialogFail(
-                "Alamat email dan kata sandi yang anda masukan salah");
+                "Alamat email atau kata sandi yang anda masukan salah");
             break;
           default:
             _showDialogFail('${e.code}: ${e.message}');
         }
       }
-    } else {
-      _showDialogFail("Pastikan alamat email valid");
-    }
   }
 
-  bool _isValidEmail(String email) {
-    // Gunakan ekspresi reguler atau pustaka validasi email untuk memeriksa format email
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-  }
 
   void _showDialogSucces() {
     showDialog(
